@@ -1,0 +1,19 @@
+﻿using System.Threading.Tasks;
+using IdentityServer.MongoDB.Abstractions.Stores;
+using IdentityServer4.Models;
+using IdentityServer4.Stores;
+using MongoDB.Driver;
+
+namespace IdentityServer4.MongoDB.Storage.Stores
+{
+	// This class just provides the IdentityServer4 versions of Client & IClientStore
+	internal class MongoClientStore : MongoClientStoreBase<Client>, IClientStore
+	{
+		public MongoClientStore(IMongoDatabase database) : base(database)
+		{
+		}
+
+		public Task<Client> FindClientByIdAsync(string clientId) =>
+			SingleOrDefaultAsync(c => c.ClientId == clientId);
+	}
+}
