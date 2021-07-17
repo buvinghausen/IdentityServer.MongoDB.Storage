@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Security.Claims;
+using IdentityServer.MongoDB.Abstractions.Options;
 using IdentityServer.MongoDB.Abstractions.Stores;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
-using MongoDB.Driver;
 
 namespace IdentityServer4.MongoDB.Storage.Stores
 {
 	internal class MongoDeviceFlowStore : MongoDeviceFlowStoreBase<DeviceCode, DeviceFlowCode>, IDeviceFlowStore
 	{
-		public MongoDeviceFlowStore(IMongoDatabase database) : base(database)
+		public MongoDeviceFlowStore(OperationalStoreOptions options) : base(options)
 		{
 		}
 
@@ -17,5 +18,8 @@ namespace IdentityServer4.MongoDB.Storage.Stores
 
 		protected override (string ClientId, DateTime CreationTime, int Lifetime) GetMetadata(DeviceCode data) =>
 			(data.ClientId, data.CreationTime, data.Lifetime);
+
+		protected override Expression<Func<DeviceFlowCode, bool>> TokenCleanupFilter =>
+			code => code.Expiration <= DateTime.UtcNow;
 	}
 }

@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using IdentityModel;
 using IdentityServer.MongoDB.Abstractions.Entities;
+using IdentityServer.MongoDB.Abstractions.Options;
+using IdentityServer.MongoDB.Abstractions.Services;
 using MongoDB.Driver;
 
 namespace IdentityServer.MongoDB.Abstractions.Stores
 {
-	internal abstract class MongoDeviceFlowStoreBase<TModel, TEntity> : MongoStoreBase<TEntity>
+	internal abstract class MongoDeviceFlowStoreBase<TModel, TEntity> : MongoStoreBase<TEntity>, IOperationalStore
 		where TModel : class
 		where TEntity : DeviceFlowCodeBase<TModel>, new()
 	{
-		protected MongoDeviceFlowStoreBase(IMongoDatabase database) : base(database,
+		protected MongoDeviceFlowStoreBase(OperationalStoreOptions options) : base(options.Database,
 			CollectionNames.DeviceCodeCollectionName)
 		{
 		}
@@ -51,11 +54,15 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 		protected abstract ClaimsPrincipal GetIdentity(TModel data);
 
 		protected abstract (string ClientId, DateTime CreationTime, int Lifetime) GetMetadata(TModel data);
+		protected abstract Expression<Func<TEntity, bool>> TokenCleanupFilter { get; }
 
 		private async Task<TModel> FindAsync(Expression<Func<TEntity, bool>> filter)
 		{
 			var document = await SingleOrDefaultAsync(filter);
 			return document?.Data;
 		}
+
+		public Task RemoveTokensAsync(CancellationToken cancellationToken = default) =>
+			DeleteManyAsync(TokenCleanupFilter, cancellationToken);
 	}
 }

@@ -1,17 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
+using IdentityServer.MongoDB.Abstractions.Options;
+using IdentityServer.MongoDB.Abstractions.Services;
 using LinqKit;
 using MongoDB.Driver;
 
 namespace IdentityServer.MongoDB.Abstractions.Stores
 {
-	internal abstract class MongoPersistedGrantStoreBase<TModel, TFilter> : MongoStoreBase<TModel>
+	internal abstract class MongoPersistedGrantStoreBase<TModel, TFilter> : MongoStoreBase<TModel>, IOperationalStore
 	{
-		protected MongoPersistedGrantStoreBase(IMongoDatabase database) : base(database,
+		protected readonly bool RemoveConsumedTokens;
+
+		protected MongoPersistedGrantStoreBase(OperationalStoreOptions options) : base(options.Database,
 			CollectionNames.PersistedGrantCollectionName)
 		{
+			RemoveConsumedTokens = options.RemoveConsumedTokens;
 		}
 
 		protected abstract (string SubjectId, string ClientId, string SessionId, string Type) GetFilterMetadata(
@@ -24,6 +30,7 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 		protected abstract Expression<Func<TModel, string>> ClientIdSelector { get; }
 		protected abstract Expression<Func<TModel, string>> SessionIdSelector { get; }
 		protected abstract Expression<Func<TModel, string>> TypeSelector { get; }
+		protected abstract Expression<Func<TModel, bool>> TokenCleanupFilter { get; }
 
 		public Task StoreAsync(TModel grant) =>
 			ReplaceOneAsync(PropFilter(KeySelector, GetKey(grant)), grant);
@@ -68,5 +75,8 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 			string value) =>
 			Expression.Lambda<Func<TModel, bool>>
 				(Expression.Equal(selector.Body, Expression.Constant(value)), selector.Parameters[0]);
+
+		public Task RemoveTokensAsync(CancellationToken cancellationToken = default) =>
+			DeleteManyAsync(TokenCleanupFilter, cancellationToken);
 	}
 }

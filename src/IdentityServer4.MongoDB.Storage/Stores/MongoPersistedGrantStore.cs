@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Linq.Expressions;
+using IdentityServer.MongoDB.Abstractions.Options;
 using IdentityServer.MongoDB.Abstractions.Stores;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
-using MongoDB.Driver;
 
 namespace IdentityServer4.MongoDB.Storage.Stores
 {
 	internal class MongoPersistedGrantStore : MongoPersistedGrantStoreBase<PersistedGrant, PersistedGrantFilter>, IPersistedGrantStore
 	{
-		public MongoPersistedGrantStore(IMongoDatabase database) : base(database)
+		public MongoPersistedGrantStore(OperationalStoreOptions options) : base(options)
 		{
 		}
 
@@ -31,5 +31,10 @@ namespace IdentityServer4.MongoDB.Storage.Stores
 		protected override Expression<Func<PersistedGrant, string>> SessionIdSelector => grant => grant.SessionId;
 
 		protected override Expression<Func<PersistedGrant, string>> TypeSelector => grant => grant.Type;
+
+		protected override Expression<Func<PersistedGrant, bool>> TokenCleanupFilter => grant =>
+			RemoveConsumedTokens
+				? grant.Expiration < DateTime.UtcNow || grant.ConsumedTime < DateTime.UtcNow
+				: grant.Expiration < DateTime.UtcNow;
 	}
 }
