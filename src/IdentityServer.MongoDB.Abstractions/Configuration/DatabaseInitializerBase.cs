@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +13,7 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 	internal abstract class DatabaseInitializerBase
 	{
 		private readonly IMongoDatabase _database;
+
 		private readonly CreateCollectionOptions _options = new()
 		{
 			Collation = new Collation(CultureInfo.CurrentCulture.Name, strength: CollationStrength.Secondary)
@@ -24,13 +27,14 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 		// Sets up the Clients & Resources collections and indexes
 		public abstract Task InitializeConfigurationStoreAsync(CancellationToken cancellationToken = default);
 
-		protected async Task InitializeConfigurationStoreAsync<TResource>(Expression<Func<TResource, object>> nameSelector, CancellationToken cancellationToken = default)
+		protected async Task InitializeConfigurationStoreAsync<TResource>(
+			Expression<Func<TResource, object>> nameSelector, IEnumerable<string> additionalCollectionNames,
+			CancellationToken cancellationToken = default)
 		{
 			// Step 1 create the collections with case insensitive collation to match SQL Server defaults
-			await Task.WhenAll(
-				_database.CreateCollectionAsync(CollectionNames.ClientCollectionName, _options, cancellationToken),
-				_database.CreateCollectionAsync(CollectionNames.ResourceCollectionName, _options, cancellationToken))
-				.ConfigureAwait(false);
+			await CreateCollectionsAsync(
+				new[] { CollectionNames.ClientCollectionName, CollectionNames.ResourceCollectionName }.Concat(
+					additionalCollectionNames), cancellationToken).ConfigureAwait(false);
 
 			// Step 2 create the unique index on the Resources collection which is a unique composite key of name & the type discriminator
 			await _database
@@ -56,10 +60,9 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 			CancellationToken cancellationToken = default)
 		{
 			// Step 1 create the collections with case insensitive collation to match SQL Server defaults
-			await Task.WhenAll(
-					_database.CreateCollectionAsync(CollectionNames.DeviceCodeCollectionName, _options, cancellationToken),
-					_database.CreateCollectionAsync(CollectionNames.PersistedGrantCollectionName, _options, cancellationToken))
-				.ConfigureAwait(false);
+			await CreateCollectionsAsync(
+				new[] { CollectionNames.DeviceCodeCollectionName, CollectionNames.PersistedGrantCollectionName },
+				cancellationToken).ConfigureAwait(false);
 
 			// Step 2 create the indexes on both collections
 			var deviceIxBuilder = Builders<TDeviceCode>.IndexKeys;
@@ -67,58 +70,44 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 
 			await Task.WhenAll(
 				_database
-					.GetCollection<TDeviceCode>(CollectionNames.DeviceCodeCollectionName).Indexes.CreateManyAsync(new CreateIndexModel<TDeviceCode>[]
-					{
-						new (deviceIxBuilder
-								.Ascending(deviceCodeSelector),
-							new CreateIndexOptions
-							{
-								Background = true,
-								Name = "ux_deviceCode",
-								Unique = true
-							}),
-						new (deviceIxBuilder
-								.Ascending(deviceCodeExpirationSelector),
-							new CreateIndexOptions
-							{
-								Background = true,
-								Name = "ix_expiration",
-								Unique = false
-							})
-					}, cancellationToken),
+					.GetCollection<TDeviceCode>(CollectionNames.DeviceCodeCollectionName).Indexes.CreateManyAsync(
+						new CreateIndexModel<TDeviceCode>[]
+						{
+							new(deviceIxBuilder
+									.Ascending(deviceCodeSelector),
+								new CreateIndexOptions {Background = true, Name = "ux_deviceCode", Unique = true}),
+							new(deviceIxBuilder
+									.Ascending(deviceCodeExpirationSelector),
+								new CreateIndexOptions {Background = true, Name = "ix_expiration", Unique = false})
+						}, cancellationToken),
 				_database
-					.GetCollection<TPersistedGrant>(CollectionNames.PersistedGrantCollectionName).Indexes.CreateManyAsync(new CreateIndexModel<TPersistedGrant>[]
+					.GetCollection<TPersistedGrant>(CollectionNames.PersistedGrantCollectionName).Indexes
+					.CreateManyAsync(new CreateIndexModel<TPersistedGrant>[]
 					{
-						new (grantIxBuilder
+						new(grantIxBuilder
 								.Ascending(persistedGrantSubjectIdSelector)
 								.Ascending(persistedGrantClientIdSelector)
 								.Ascending(persistedGrantTypeSelector),
 							new CreateIndexOptions
 							{
-								Background = true,
-								Name = "ix_subjectId_clientId_type",
-								Unique = false
+								Background = true, Name = "ix_subjectId_clientId_type", Unique = false
 							}),
-						new (grantIxBuilder
+						new(grantIxBuilder
 								.Ascending(persistedGrantSubjectIdSelector)
 								.Ascending(persistedGrantSessionIdSelector)
 								.Ascending(persistedGrantTypeSelector),
 							new CreateIndexOptions
 							{
-								Background = true,
-								Name = "ix_subjectId_sessionId_type",
-								Unique = false
+								Background = true, Name = "ix_subjectId_sessionId_type", Unique = false
 							}),
-						new (grantIxBuilder
+						new(grantIxBuilder
 								.Ascending(persistedGrantExpirationSelector),
-							new CreateIndexOptions
-							{
-								Background = true,
-								Name = "ix_expiration",
-								Unique = false
-							})
+							new CreateIndexOptions {Background = true, Name = "ix_expiration", Unique = false})
 					}, cancellationToken)
 			).ConfigureAwait(false);
 		}
+
+		private Task CreateCollectionsAsync(IEnumerable<string> names, CancellationToken cancellationToken) =>
+			Task.WhenAll(names.Select(name => _database.CreateCollectionAsync(name, _options, cancellationToken)));
 	}
 }

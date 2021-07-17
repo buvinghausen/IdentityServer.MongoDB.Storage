@@ -13,7 +13,7 @@ namespace IdentityServer4.MongoDB.Storage.Configuration
 		}
 
 		public override Task InitializeConfigurationStoreAsync(CancellationToken cancellationToken = default) =>
-			InitializeConfigurationStoreAsync<Resource>(r => r.Name, cancellationToken);
+			InitializeConfigurationStoreAsync<Resource>(r => r.Name, new string[0], cancellationToken);
 
 		public override Task InitializeOperationalStoreAsync(CancellationToken cancellationToken = default) =>
 			InitializeOperationalStoreAsync<DeviceFlowCode, PersistedGrant>(
