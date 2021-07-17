@@ -66,6 +66,7 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 			Expression<Func<TPersistedGrant, object>> persistedGrantSessionIdSelector,
 			Expression<Func<TPersistedGrant, object>> persistedGrantTypeSelector,
 			Expression<Func<TPersistedGrant, object>> persistedGrantExpirationSelector,
+			Expression<Func<TPersistedGrant, object>> persistedGrantConsumedSelector,
 			CancellationToken cancellationToken = default)
 		{
 			// Step 1 create the collections with case insensitive collation to match SQL Server defaults
@@ -111,7 +112,10 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 							}),
 						new(grantIxBuilder
 								.Ascending(persistedGrantExpirationSelector),
-							new CreateIndexOptions {Background = true, Name = "ix_expiration", Unique = false})
+							new CreateIndexOptions {Background = true, Name = "ix_expiration", Unique = false}),
+						new(grantIxBuilder
+								.Ascending(persistedGrantConsumedSelector),
+							new CreateIndexOptions {Background = true, Name = "ix_consumedTime", Unique = false})
 					}, cancellationToken)
 			).ConfigureAwait(false);
 		}

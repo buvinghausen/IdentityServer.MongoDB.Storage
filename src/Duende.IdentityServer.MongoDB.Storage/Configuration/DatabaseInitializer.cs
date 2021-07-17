@@ -13,7 +13,8 @@ namespace Duende.IdentityServer.MongoDB.Storage.Configuration
 		}
 
 		public override Task InitializeConfigurationStoreAsync(CancellationToken cancellationToken = default) =>
-			InitializeConfigurationStoreAsync<Client, Resource>(c => c.AllowedCorsOrigins, r => r.Name, new[] { "IdentityProviders", "SigningKeys" },
+			InitializeConfigurationStoreAsync<Client, Resource>(c => c.AllowedCorsOrigins, r => r.Name,
+				new[] { "IdentityProviders", "SigningKeys" },
 				cancellationToken);
 
 		public override Task InitializeOperationalStoreAsync(CancellationToken cancellationToken = default) =>
@@ -25,6 +26,7 @@ namespace Duende.IdentityServer.MongoDB.Storage.Configuration
 				pg => pg.SessionId,
 				pg => pg.Type,
 				pg => pg.Expiration,
+				pg => pg.ConsumedTime,
 				cancellationToken);
 	}
 }

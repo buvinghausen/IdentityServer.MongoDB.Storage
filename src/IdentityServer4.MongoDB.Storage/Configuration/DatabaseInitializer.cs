@@ -24,6 +24,7 @@ namespace IdentityServer4.MongoDB.Storage.Configuration
 				pg => pg.SessionId,
 				pg => pg.Type,
 				pg => pg.Expiration,
+				pg => pg.ConsumedTime,
 				cancellationToken);
 	}
 }
