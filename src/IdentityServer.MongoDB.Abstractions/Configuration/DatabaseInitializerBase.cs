@@ -27,8 +27,10 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 		// Sets up the Clients & Resources collections and indexes
 		public abstract Task InitializeConfigurationStoreAsync(CancellationToken cancellationToken = default);
 
-		protected async Task InitializeConfigurationStoreAsync<TResource>(
-			Expression<Func<TResource, object>> nameSelector, IEnumerable<string> additionalCollectionNames,
+		protected async Task InitializeConfigurationStoreAsync<TClient, TResource>(
+			Expression<Func<TClient, object>> corsOriginsSelector,
+			Expression<Func<TResource, object>> nameSelector,
+			IEnumerable<string> additionalCollectionNames,
 			CancellationToken cancellationToken = default)
 		{
 			// Step 1 create the collections with case insensitive collation to match SQL Server defaults
@@ -37,13 +39,20 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 					additionalCollectionNames), cancellationToken).ConfigureAwait(false);
 
 			// Step 2 create the unique index on the Resources collection which is a unique composite key of name & the type discriminator
-			await _database
-				.GetCollection<TResource>(CollectionNames.ResourceCollectionName).Indexes
-				.CreateOneAsync(Builders<TResource>.IndexKeys
-						.Ascending(nameSelector)
-						.Ascending(new StringFieldDefinition<TResource>("_t")),
-					new CreateIndexOptions { Background = true, Name = "ux_name_t", Unique = true },
-					cancellationToken).ConfigureAwait(false);
+			await Task.WhenAll(
+				_database
+					.GetCollection<TClient>(CollectionNames.ResourceCollectionName).Indexes
+					.CreateOneAsync(Builders<TClient>.IndexKeys
+							.Ascending(corsOriginsSelector),
+						new CreateIndexOptions { Background = true, Name = "ix_allowedCorsOrigins", Unique = false },
+						cancellationToken),
+				_database
+					.GetCollection<TResource>(CollectionNames.ResourceCollectionName).Indexes
+					.CreateOneAsync(Builders<TResource>.IndexKeys
+							.Ascending(nameSelector)
+							.Ascending(new StringFieldDefinition<TResource>("_t")),
+						new CreateIndexOptions { Background = true, Name = "ux_name_t", Unique = true },
+						cancellationToken)).ConfigureAwait(false);
 		}
 
 		// Sets up the DeviceCodes & PersistedGrants collections and indexes
