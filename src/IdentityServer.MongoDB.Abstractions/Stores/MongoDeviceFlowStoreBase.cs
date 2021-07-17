@@ -20,6 +20,7 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 		{
 		}
 
+		// IDeviceFlowStore implementation
 		public Task StoreDeviceAuthorizationAsync(string deviceCode, string userCode, TModel data)
 		{
 			var (clientId, creationTime, lifetime) = GetMetadata(data);
@@ -50,19 +51,22 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 				.Set(dc => dc.Data, data)
 				.Set(dc => dc.SubjectId, GetIdentity(data)?.FindFirst(JwtClaimTypes.Subject)?.Value));
 
-		// Force child class to provide selector function for resolving ClaimsPrincipal from model
+		// IOperationalStore implementation
+		public Task RemoveTokensAsync(CancellationToken cancellationToken = default) =>
+			DeleteManyAsync(TokenCleanupFilter, cancellationToken);
+
+		// Force child class to provide selectors & functions to handle different class assemblies & definitions
 		protected abstract ClaimsPrincipal GetIdentity(TModel data);
 
 		protected abstract (string ClientId, DateTime CreationTime, int Lifetime) GetMetadata(TModel data);
+
 		protected abstract Expression<Func<TEntity, bool>> TokenCleanupFilter { get; }
 
+		// Helper function to unwrap the model from the entity
 		private async Task<TModel> FindAsync(Expression<Func<TEntity, bool>> filter)
 		{
 			var document = await SingleOrDefaultAsync(filter);
 			return document?.Data;
 		}
-
-		public Task RemoveTokensAsync(CancellationToken cancellationToken = default) =>
-			DeleteManyAsync(TokenCleanupFilter, cancellationToken);
 	}
 }

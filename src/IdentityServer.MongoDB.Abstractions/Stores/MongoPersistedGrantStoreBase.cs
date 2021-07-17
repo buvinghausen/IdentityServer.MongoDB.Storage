@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using IdentityServer.MongoDB.Abstractions.Options;
 using IdentityServer.MongoDB.Abstractions.Services;
 using LinqKit;
-using MongoDB.Driver;
 
 namespace IdentityServer.MongoDB.Abstractions.Stores
 {
@@ -20,18 +19,7 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 			RemoveConsumedTokens = options.RemoveConsumedTokens;
 		}
 
-		protected abstract (string SubjectId, string ClientId, string SessionId, string Type) GetFilterMetadata(
-			TFilter filter);
-
-		protected abstract void ValidateFilter(TFilter filter);
-		protected abstract string GetKey(TModel model);
-		protected abstract Expression<Func<TModel, string>> KeySelector { get; }
-		protected abstract Expression<Func<TModel, string>> SubjectIdSelector { get; }
-		protected abstract Expression<Func<TModel, string>> ClientIdSelector { get; }
-		protected abstract Expression<Func<TModel, string>> SessionIdSelector { get; }
-		protected abstract Expression<Func<TModel, string>> TypeSelector { get; }
-		protected abstract Expression<Func<TModel, bool>> TokenCleanupFilter { get; }
-
+		// IPersistedGrantStore implementation
 		public Task StoreAsync(TModel grant) =>
 			ReplaceOneAsync(PropFilter(KeySelector, GetKey(grant)), grant);
 
@@ -45,6 +33,31 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 		public Task RemoveAllAsync(TFilter filter) =>
 			DeleteManyAsync(ToExpression(filter));
 
+		// IOperationalStore implementation
+		public Task RemoveTokensAsync(CancellationToken cancellationToken = default) =>
+			DeleteManyAsync(TokenCleanupFilter, cancellationToken);
+
+		// Force child class to provide selectors & functions to handle different class assemblies & definitions
+		protected abstract (string SubjectId, string ClientId, string SessionId, string Type) GetFilterMetadata(
+			TFilter filter);
+
+		protected abstract void ValidateFilter(TFilter filter);
+
+		protected abstract string GetKey(TModel model);
+
+		protected abstract Expression<Func<TModel, string>> KeySelector { get; }
+
+		protected abstract Expression<Func<TModel, string>> SubjectIdSelector { get; }
+
+		protected abstract Expression<Func<TModel, string>> ClientIdSelector { get; }
+
+		protected abstract Expression<Func<TModel, string>> SessionIdSelector { get; }
+
+		protected abstract Expression<Func<TModel, string>> TypeSelector { get; }
+
+		protected abstract Expression<Func<TModel, bool>> TokenCleanupFilter { get; }
+
+		// Helper function to build Mongo driver compatible predicates
 		private Expression<Func<TModel, bool>> ToExpression(TFilter filter)
 		{
 			// Perform validation on the filter
@@ -71,12 +84,10 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 			return exp.Expand();
 		}
 
+		// Helper function to flatten selector expression & concrete value into predicate expression
 		private static Expression<Func<TModel, bool>> PropFilter(Expression<Func<TModel, string>> selector,
 			string value) =>
 			Expression.Lambda<Func<TModel, bool>>
 				(Expression.Equal(selector.Body, Expression.Constant(value)), selector.Parameters[0]);
-
-		public Task RemoveTokensAsync(CancellationToken cancellationToken = default) =>
-			DeleteManyAsync(TokenCleanupFilter, cancellationToken);
 	}
 }
