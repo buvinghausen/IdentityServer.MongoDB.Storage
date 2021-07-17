@@ -1,11 +1,11 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Duende.IdentityServer.Models;
 using IdentityServer.MongoDB.Abstractions.Admin;
 using IdentityServer.MongoDB.Abstractions.Stores;
-using IdentityServer4.Models;
 using MongoDB.Driver;
 
-namespace IdentityServer4.MongoDB.Storage.Admin
+namespace Duende.IdentityServer.MongoDB.Storage.Admin
 {
 	public class MongoResourceUpdater<T> : MongoStoreUpdaterBase<T> where T : Resource
 	{

@@ -12,9 +12,8 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 		where TModel : class
 		where TEntity : DeviceFlowCodeBase<TModel>, new()
 	{
-		internal const string CollectionName = "DeviceCodes";
-
-		protected MongoDeviceFlowStoreBase(IMongoDatabase database) : base(database, CollectionName)
+		protected MongoDeviceFlowStoreBase(IMongoDatabase database) : base(database,
+			CollectionNames.DeviceCodeCollectionName)
 		{
 		}
 

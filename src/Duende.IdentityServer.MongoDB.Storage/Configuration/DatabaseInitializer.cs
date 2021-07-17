@@ -1,10 +1,10 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Duende.IdentityServer.Models;
 using IdentityServer.MongoDB.Abstractions.Configuration;
-using IdentityServer4.Models;
 using MongoDB.Driver;
 
-namespace IdentityServer4.MongoDB.Storage.Configuration
+namespace Duende.IdentityServer.MongoDB.Storage.Configuration
 {
 	internal class DatabaseInitializer : DatabaseInitializerBase
 	{

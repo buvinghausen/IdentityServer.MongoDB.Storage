@@ -7,9 +7,8 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 {
 	internal abstract class MongoResourceStoreBase<T> : MongoStoreBase<T>
 	{
-		internal const string CollectionName = "Resources";
-
-		protected MongoResourceStoreBase(IMongoDatabase database) : base(database, CollectionName)
+		protected MongoResourceStoreBase(IMongoDatabase database) : base(database,
+			CollectionNames.ResourceCollectionName)
 		{
 		}
 

@@ -9,13 +9,14 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 {
 	internal abstract class MongoPersistedGrantStoreBase<TModel, TFilter> : MongoStoreBase<TModel>
 	{
-		internal const string CollectionName = "PersistedGrants";
-
-		protected MongoPersistedGrantStoreBase(IMongoDatabase database) : base(database, CollectionName)
+		protected MongoPersistedGrantStoreBase(IMongoDatabase database) : base(database,
+			CollectionNames.PersistedGrantCollectionName)
 		{
 		}
 
-		protected abstract (string SubjectId, string ClientId, string SessionId, string Type) GetFilterMetadata(TFilter filter);
+		protected abstract (string SubjectId, string ClientId, string SessionId, string Type) GetFilterMetadata(
+			TFilter filter);
+
 		protected abstract void ValidateFilter(TFilter filter);
 		protected abstract string GetKey(TModel model);
 		protected abstract Expression<Func<TModel, string>> KeySelector { get; }
