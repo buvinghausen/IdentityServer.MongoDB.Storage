@@ -16,6 +16,10 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 			_collection = database.GetCollection<T>(collectionName);
 		}
 
+		protected Task<bool> AnyAsync(Expression<Func<T, bool>> filter,
+			CancellationToken cancellationToken = default) =>
+			_collection.Find(filter).AnyAsync(cancellationToken);
+
 		protected Task DeleteManyAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default) =>
 			_collection.DeleteManyAsync(filter, cancellationToken);
 
