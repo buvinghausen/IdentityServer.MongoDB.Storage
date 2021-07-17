@@ -1,14 +1,22 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer.MongoDB.Abstractions.Configuration;
+using IdentityServer.MongoDB.Abstractions.Options;
 using IdentityServer4.Models;
-using MongoDB.Driver;
 
 namespace IdentityServer4.MongoDB.Storage.Configuration
 {
 	internal class DatabaseInitializer : DatabaseInitializerBase
 	{
-		public DatabaseInitializer(IMongoDatabase database) : base(database)
+		public DatabaseInitializer(ConfigurationStoreOptions configurationStoreOptions, OperationalStoreOptions operationalStoreOptions) : base(configurationStoreOptions, operationalStoreOptions)
+		{
+		}
+
+		public DatabaseInitializer(ConfigurationStoreOptions configurationStoreOptions) : base(configurationStoreOptions)
+		{
+		}
+
+		public DatabaseInitializer(OperationalStoreOptions operationalStoreOptions) : base(operationalStoreOptions: operationalStoreOptions)
 		{
 		}
 

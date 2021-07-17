@@ -1,15 +1,15 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Duende.IdentityServer.Models;
+using Duende.IdentityServer.MongoDB.Storage.Options;
 using IdentityServer.MongoDB.Abstractions.Admin;
-using MongoDB.Driver;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Admin
 {
-	class MongoSigningKeyUpdater : MongoStoreUpdaterBase<SerializedKey>
+	internal class MongoSigningKeyUpdater : MongoStoreUpdaterBase<SerializedKey>
 	{
-		public MongoSigningKeyUpdater(IMongoDatabase database) : base(
-			database.GetCollection<SerializedKey>("SigningKeys"))
+		public MongoSigningKeyUpdater(ConfigurationStoreOptions options) : base(
+			options.Database.GetCollection<SerializedKey>(options.SigningKeyCollectionName))
 		{
 		}
 

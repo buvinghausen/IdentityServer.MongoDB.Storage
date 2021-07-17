@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Duende.IdentityServer.Models;
+using Duende.IdentityServer.MongoDB.Storage.Options;
 using Duende.IdentityServer.Stores;
 using IdentityServer.MongoDB.Abstractions.Stores;
-using MongoDB.Driver;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Stores
 {
 	internal class MongoSigningKeyStore : MongoStoreBase<SerializedKey>, ISigningKeyStore
 	{
-		public MongoSigningKeyStore(IMongoDatabase database) : base(database, "SigningKeys")
+		public MongoSigningKeyStore(ConfigurationStoreOptions options) : base(options.Database, options.SigningKeyCollectionName)
 		{
 		}
 

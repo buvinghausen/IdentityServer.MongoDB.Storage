@@ -1,16 +1,16 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Duende.IdentityServer.Models;
+using Duende.IdentityServer.MongoDB.Storage.Options;
 using IdentityServer.MongoDB.Abstractions.Admin;
-using IdentityServer.MongoDB.Abstractions.Stores;
-using MongoDB.Driver;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Admin
 {
-	public class MongoClientUpdater : MongoStoreUpdaterBase<Client>
+	internal class MongoClientUpdater : MongoStoreUpdaterBase<Client>
 	{
-		public MongoClientUpdater(IMongoDatabase database) : base(
-			database.GetCollection<Client>(CollectionNames.ClientCollectionName))
+		// ReSharper disable once SuggestBaseTypeForParameter
+		public MongoClientUpdater(ConfigurationStoreOptions options) : base(
+			options.Database.GetCollection<Client>(options.ClientCollectionName))
 		{
 		}
 

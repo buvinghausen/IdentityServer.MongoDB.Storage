@@ -2,15 +2,16 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Duende.IdentityServer.Models;
+using Duende.IdentityServer.MongoDB.Storage.Options;
 using Duende.IdentityServer.Stores;
 using IdentityServer.MongoDB.Abstractions.Stores;
-using MongoDB.Driver;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Stores
 {
 	internal class MongoResourceStore : MongoResourceStoreBase<Resource>, IResourceStore
 	{
-		public MongoResourceStore(IMongoDatabase database) : base(database)
+		// ReSharper disable once SuggestBaseTypeForParameter
+		public MongoResourceStore(ConfigurationStoreOptions options) : base(options)
 		{
 		}
 

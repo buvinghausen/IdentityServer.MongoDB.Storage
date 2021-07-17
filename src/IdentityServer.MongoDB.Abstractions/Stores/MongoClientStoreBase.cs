@@ -1,10 +1,10 @@
-﻿using MongoDB.Driver;
+﻿using IdentityServer.MongoDB.Abstractions.Options;
 
 namespace IdentityServer.MongoDB.Abstractions.Stores
 {
 	internal abstract class MongoClientStoreBase<T> : MongoStoreBase<T>
 	{
-		protected MongoClientStoreBase(IMongoDatabase database) : base(database, CollectionNames.ClientCollectionName)
+		protected MongoClientStoreBase(ConfigurationStoreOptions options) : base(options.Database, options.ClientCollectionName)
 		{
 		}
 	}

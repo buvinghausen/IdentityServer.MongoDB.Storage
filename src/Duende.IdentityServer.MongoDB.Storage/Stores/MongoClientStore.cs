@@ -1,15 +1,17 @@
 ﻿using System.Threading.Tasks;
 using Duende.IdentityServer.Models;
+using Duende.IdentityServer.MongoDB.Storage.Options;
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Stores;
 using IdentityServer.MongoDB.Abstractions.Stores;
-using MongoDB.Driver;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Stores
 {
 	internal class MongoClientStore : MongoClientStoreBase<Client>, IClientStore, ICorsPolicyService
 	{
-		public MongoClientStore(IMongoDatabase database) : base(database)
+
+		// ReSharper disable once SuggestBaseTypeForParameter
+		public MongoClientStore(ConfigurationStoreOptions options) : base(options)
 		{
 		}
 

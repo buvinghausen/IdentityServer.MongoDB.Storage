@@ -2,13 +2,21 @@
 using System.Threading.Tasks;
 using Duende.IdentityServer.Models;
 using IdentityServer.MongoDB.Abstractions.Configuration;
-using MongoDB.Driver;
+using IdentityServer.MongoDB.Abstractions.Options;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Configuration
 {
 	internal class DatabaseInitializer : DatabaseInitializerBase
 	{
-		public DatabaseInitializer(IMongoDatabase database) : base(database)
+		public DatabaseInitializer(ConfigurationStoreOptions configurationStoreOptions, OperationalStoreOptions operationalStoreOptions) : base(configurationStoreOptions, operationalStoreOptions)
+		{
+		}
+
+		public DatabaseInitializer(ConfigurationStoreOptions configurationStoreOptions) : base(configurationStoreOptions)
+		{
+		}
+
+		public DatabaseInitializer(OperationalStoreOptions operationalStoreOptions) : base(operationalStoreOptions: operationalStoreOptions)
 		{
 		}
 

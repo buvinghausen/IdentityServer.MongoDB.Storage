@@ -14,7 +14,7 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 		protected readonly bool RemoveConsumedTokens;
 
 		protected MongoPersistedGrantStoreBase(OperationalStoreOptions options) : base(options.Database,
-			CollectionNames.PersistedGrantCollectionName)
+			options.PersistedGrantCollectionName)
 		{
 			RemoveConsumedTokens = options.RemoveConsumedTokens;
 		}

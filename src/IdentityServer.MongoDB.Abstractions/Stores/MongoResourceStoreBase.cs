@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MongoDB.Driver;
+using IdentityServer.MongoDB.Abstractions.Options;
 
 namespace IdentityServer.MongoDB.Abstractions.Stores
 {
 	internal abstract class MongoResourceStoreBase<T> : MongoStoreBase<T>
 	{
-		protected MongoResourceStoreBase(IMongoDatabase database) : base(database,
-			CollectionNames.ResourceCollectionName)
+		protected MongoResourceStoreBase(ConfigurationStoreOptions options) : base(options.Database,
+			options.ResourceCollectionName)
 		{
 		}
 

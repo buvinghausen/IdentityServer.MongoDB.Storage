@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer.MongoDB.Abstractions.Options;
 using IdentityServer.MongoDB.Abstractions.Stores;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
-using MongoDB.Driver;
 
 namespace IdentityServer4.MongoDB.Storage.Stores
 {
 	// This class leverages MongoDB's polymorphic storage capacity to keep all three resource types in one collection
 	internal class MongoResourceStore : MongoResourceStoreBase<Resource>, IResourceStore
 	{
-		public MongoResourceStore(IMongoDatabase database) : base(database)
+		public MongoResourceStore(ConfigurationStoreOptions options) : base(options)
 		{
 		}
 

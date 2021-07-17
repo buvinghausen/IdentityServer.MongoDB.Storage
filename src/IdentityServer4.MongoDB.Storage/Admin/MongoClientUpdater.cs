@@ -1,16 +1,15 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer.MongoDB.Abstractions.Admin;
-using IdentityServer.MongoDB.Abstractions.Stores;
+using IdentityServer.MongoDB.Abstractions.Options;
 using IdentityServer4.Models;
-using MongoDB.Driver;
 
 namespace IdentityServer4.MongoDB.Storage.Admin
 {
-	public class MongoClientUpdater : MongoStoreUpdaterBase<Client>
+	internal class MongoClientUpdater : MongoStoreUpdaterBase<Client>
 	{
-		public MongoClientUpdater(IMongoDatabase database) : base(
-			database.GetCollection<Client>(CollectionNames.ClientCollectionName))
+		public MongoClientUpdater(ConfigurationStoreOptions options) : base(
+			options.Database.GetCollection<Client>(options.ClientCollectionName))
 		{
 		}
 

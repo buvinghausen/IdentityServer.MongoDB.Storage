@@ -2,14 +2,14 @@
 using System.Threading.Tasks;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Stores;
+using Duende.IdentityServer.MongoDB.Storage.Options;
 using IdentityServer.MongoDB.Abstractions.Stores;
-using MongoDB.Driver;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Stores
 {
 	internal class MongoIdentityProviderStore : MongoStoreBase<IdentityProvider>, IIdentityProviderStore
 	{
-		public MongoIdentityProviderStore(IMongoDatabase database) : base(database, "IdentityProviders")
+		public MongoIdentityProviderStore(ConfigurationStoreOptions options) : base(options.Database, options.IdentityProviderCollectionName)
 		{
 		}
 
