@@ -12,7 +12,6 @@ namespace IdentityServer4.MongoDB.Storage.Stores
 	// This class leverages MongoDB's polymorphic storage capacity to keep all three resource types in one collection
 	internal class MongoResourceStore : MongoResourceStoreBase<Resource, IdentityResource, ApiResource, ApiScope, Resources>, IResourceStore
 	{
-		// ReSharper disable once SuggestBaseTypeForParameter
 		public MongoResourceStore(ConfigurationStoreOptions options) : base(options)
 		{
 		}
