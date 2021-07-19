@@ -15,16 +15,10 @@ namespace IdentityServer4.MongoDB.Storage.Stores
 		{
 		}
 
-		public Task<Client> FindClientByIdAsync(string clientId) =>
-			FindClientByIdAsync(clientId, CancellationToken.None);
-
-		public Task<Client> FindClientByIdAsync(string clientId, CancellationToken cancellationToken) =>
+		public override Task<Client> FindClientByIdAsync(string clientId, CancellationToken cancellationToken) =>
 			SingleOrDefaultAsync(c => c.ClientId == clientId, cancellationToken);
 
-		public Task<bool> IsOriginAllowedAsync(string origin) =>
-			IsOriginAllowedAsync(origin, CancellationToken.None);
-
-		public Task<bool> IsOriginAllowedAsync(string origin, CancellationToken cancellationToken) =>
+		public override Task<bool> IsOriginAllowedAsync(string origin, CancellationToken cancellationToken) =>
 			AnyAsync(c => c.AllowedCorsOrigins.Contains(origin), cancellationToken);
 	}
 }
