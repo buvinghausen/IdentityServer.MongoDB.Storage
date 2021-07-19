@@ -21,7 +21,10 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 		}
 
 		// IDeviceFlowStore implementation
-		public Task StoreDeviceAuthorizationAsync(string deviceCode, string userCode, TModel data)
+		public Task StoreDeviceAuthorizationAsync(string deviceCode, string userCode, TModel data) =>
+			StoreDeviceAuthorizationAsync(deviceCode, userCode, data, CancellationToken.None);
+
+		public Task StoreDeviceAuthorizationAsync(string deviceCode, string userCode, TModel data, CancellationToken cancellationToken)
 		{
 			var (clientId, creationTime, lifetime) = GetMetadata(data);
 			return ReplaceOneAsync(dc => dc.UserCode == userCode,
@@ -34,22 +37,34 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 					CreationTime = creationTime,
 					Expiration = creationTime.AddSeconds(lifetime),
 					Data = data
-				});
+				}, cancellationToken);
 		}
 
 		public Task<TModel> FindByUserCodeAsync(string userCode) =>
-			FindAsync(dc => dc.UserCode == userCode);
+			FindByUserCodeAsync(userCode, CancellationToken.None);
+
+		public Task<TModel> FindByUserCodeAsync(string userCode, CancellationToken cancellationToken) =>
+			FindAsync(dc => dc.UserCode == userCode, cancellationToken);
 
 		public Task<TModel> FindByDeviceCodeAsync(string deviceCode) =>
-			FindAsync(dc => dc.DeviceCode == deviceCode);
+			FindByDeviceCodeAsync(deviceCode, CancellationToken.None);
+
+		public Task<TModel> FindByDeviceCodeAsync(string deviceCode, CancellationToken cancellationToken) =>
+			FindAsync(dc => dc.DeviceCode == deviceCode, cancellationToken);
 
 		public Task RemoveByDeviceCodeAsync(string deviceCode) =>
-			DeleteOneAsync(dc => dc.DeviceCode == deviceCode);
+			RemoveByDeviceCodeAsync(deviceCode, CancellationToken.None);
+
+		public Task RemoveByDeviceCodeAsync(string deviceCode, CancellationToken cancellationToken) =>
+			DeleteOneAsync(dc => dc.DeviceCode == deviceCode, cancellationToken);
 
 		public Task UpdateByUserCodeAsync(string userCode, TModel data) =>
+			UpdateByUserCodeAsync(userCode, data, CancellationToken.None);
+
+		public Task UpdateByUserCodeAsync(string userCode, TModel data, CancellationToken cancellationToken) =>
 			UpdateOneAsync(dc => dc.UserCode == userCode, Builders<TEntity>.Update
 				.Set(dc => dc.Data, data)
-				.Set(dc => dc.SubjectId, GetIdentity(data)?.FindFirst(JwtClaimTypes.Subject)?.Value));
+				.Set(dc => dc.SubjectId, GetIdentity(data)?.FindFirst(JwtClaimTypes.Subject)?.Value), cancellationToken);
 
 		// IOperationalStore implementation
 		public Task RemoveTokensAsync(CancellationToken cancellationToken = default) =>
@@ -63,9 +78,9 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 		protected abstract Expression<Func<TEntity, bool>> TokenCleanupFilter { get; }
 
 		// Helper function to unwrap the model from the entity
-		private async Task<TModel> FindAsync(Expression<Func<TEntity, bool>> filter)
+		private async Task<TModel> FindAsync(Expression<Func<TEntity, bool>> filter, CancellationToken cancellationToken)
 		{
-			var document = await SingleOrDefaultAsync(filter);
+			var document = await SingleOrDefaultAsync(filter, cancellationToken);
 			return document?.Data;
 		}
 	}

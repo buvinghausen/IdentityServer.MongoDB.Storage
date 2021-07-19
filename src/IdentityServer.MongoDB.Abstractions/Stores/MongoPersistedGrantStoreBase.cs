@@ -20,18 +20,30 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 		}
 
 		// IPersistedGrantStore implementation
-		public Task StoreAsync(TModel grant) =>
-			ReplaceOneAsync(PropFilter(KeySelector, GetKey(grant)), grant);
+		public Task StoreAsync(TModel grant) => StoreAsync(grant, CancellationToken.None);
 
-		public Task<TModel> GetAsync(string key) => SingleOrDefaultAsync(PropFilter(KeySelector, key));
+		public Task StoreAsync(TModel grant, CancellationToken cancellationToken) =>
+			ReplaceOneAsync(PropFilter(KeySelector, GetKey(grant)), grant, cancellationToken);
 
-		public Task RemoveAsync(string key) => DeleteOneAsync(PropFilter(KeySelector, key));
+		public Task<TModel> GetAsync(string key) => GetAsync(key, CancellationToken.None);
 
-		public Task<IEnumerable<TModel>> GetAllAsync(TFilter filter) =>
-			ToEnumerableAsync(ToExpression(filter));
+		public Task<TModel> GetAsync(string key, CancellationToken cancellationToken) =>
+			SingleOrDefaultAsync(PropFilter(KeySelector, key), cancellationToken);
 
-		public Task RemoveAllAsync(TFilter filter) =>
-			DeleteManyAsync(ToExpression(filter));
+		public Task RemoveAsync(string key) => RemoveAsync(key, CancellationToken.None);
+
+		public Task RemoveAsync(string key, CancellationToken cancellationToken) =>
+			DeleteOneAsync(PropFilter(KeySelector, key), cancellationToken);
+
+		public Task<IEnumerable<TModel>> GetAllAsync(TFilter filter) => GetAllAsync(filter, CancellationToken.None);
+
+		public Task<IEnumerable<TModel>> GetAllAsync(TFilter filter, CancellationToken cancellationToken) =>
+			ToEnumerableAsync(ToExpression(filter), cancellationToken);
+
+		public Task RemoveAllAsync(TFilter filter) => RemoveAllAsync(filter, CancellationToken.None);
+
+		public Task RemoveAllAsync(TFilter filter, CancellationToken cancellationToken) =>
+			DeleteManyAsync(ToExpression(filter), cancellationToken);
 
 		// IOperationalStore implementation
 		public Task RemoveTokensAsync(CancellationToken cancellationToken = default) =>

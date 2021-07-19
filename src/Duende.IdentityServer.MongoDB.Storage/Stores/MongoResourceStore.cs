@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.MongoDB.Storage.Options;
@@ -17,24 +18,45 @@ namespace Duende.IdentityServer.MongoDB.Storage.Stores
 
 		public Task<IEnumerable<IdentityResource>>
 			FindIdentityResourcesByScopeNameAsync(IEnumerable<string> scopeNames) =>
-			FindResourcesByName<IdentityResource>(scopeNames);
+			FindIdentityResourcesByScopeNameAsync(scopeNames, CancellationToken.None);
+
+		public Task<IEnumerable<IdentityResource>>
+			FindIdentityResourcesByScopeNameAsync(IEnumerable<string> scopeNames,
+				CancellationToken cancellationToken) =>
+			FindResourcesByName<IdentityResource>(scopeNames, cancellationToken);
 
 		public Task<IEnumerable<ApiScope>> FindApiScopesByNameAsync(IEnumerable<string> scopeNames) =>
-			FindResourcesByName<ApiScope>(scopeNames);
+			FindApiScopesByNameAsync(scopeNames, CancellationToken.None);
+
+		public Task<IEnumerable<ApiScope>> FindApiScopesByNameAsync(IEnumerable<string> scopeNames,
+			CancellationToken cancellationToken) =>
+			FindResourcesByName<ApiScope>(scopeNames, cancellationToken);
 
 		public Task<IEnumerable<ApiResource>> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames) =>
-			ToEnumerableAsync<ApiResource>(r => r.Scopes.Any(scopeNames.Contains));
+			FindApiResourcesByScopeNameAsync(scopeNames, CancellationToken.None);
+
+		public Task<IEnumerable<ApiResource>> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames,
+			CancellationToken cancellationToken) =>
+			ToEnumerableAsync<ApiResource>(r => r.Scopes.Any(scopeNames.Contains), cancellationToken);
 
 		public Task<IEnumerable<ApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> apiResourceNames) =>
-			FindResourcesByName<ApiResource>(apiResourceNames);
+			FindApiResourcesByNameAsync(apiResourceNames, CancellationToken.None);
 
-		public Task<Resources> GetAllResourcesAsync() => GetAllResourcesAsync(result =>
-			new Resources(
-				result.OfType<IdentityResource>(),
-			result.OfType<ApiResource>(),
-			result.OfType<ApiScope>()));
+		public Task<IEnumerable<ApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> apiResourceNames,
+			CancellationToken cancellationToken) =>
+			FindResourcesByName<ApiResource>(apiResourceNames, cancellationToken);
 
-		private Task<IEnumerable<T>> FindResourcesByName<T>(IEnumerable<string> names) where T : Resource =>
-			ToEnumerableAsync<T>(r => names.Contains(r.Name));
+		public Task<Resources> GetAllResourcesAsync() => GetAllResourcesAsync(CancellationToken.None);
+
+		public Task<Resources> GetAllResourcesAsync(CancellationToken cancellationToken) => GetAllResourcesAsync(
+			result =>
+				new Resources(
+					result.OfType<IdentityResource>(),
+					result.OfType<ApiResource>(),
+					result.OfType<ApiScope>()), cancellationToken);
+
+		private Task<IEnumerable<T>> FindResourcesByName<T>(IEnumerable<string> names,
+			CancellationToken cancellationToken = default) where T : Resource =>
+			ToEnumerableAsync<T>(r => names.Contains(r.Name), cancellationToken);
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer.MongoDB.Abstractions.Options;
 
@@ -12,7 +13,7 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 		{
 		}
 
-		protected async Task<TResult> GetAllResourcesAsync<TResult>(Func<IList<T>, TResult> resourceFunc) =>
-			resourceFunc(await ToListAsync().ConfigureAwait(false));
+		protected async Task<TResult> GetAllResourcesAsync<TResult>(Func<IList<T>, TResult> resourceFunc, CancellationToken cancellationToken = default) =>
+			resourceFunc(await ToListAsync(cancellationToken).ConfigureAwait(false));
 	}
 }

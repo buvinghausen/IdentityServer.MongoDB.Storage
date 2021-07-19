@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Stores;
@@ -14,12 +15,18 @@ namespace Duende.IdentityServer.MongoDB.Storage.Stores
 		}
 
 		public Task<IEnumerable<IdentityProviderName>> GetAllSchemeNamesAsync() =>
+			GetAllSchemeNamesAsync(CancellationToken.None);
+
+		public Task<IEnumerable<IdentityProviderName>> GetAllSchemeNamesAsync(CancellationToken cancellationToken) =>
 			ToEnumerableAsync(ip => new IdentityProviderName
 			{
 				DisplayName = ip.DisplayName, Enabled = ip.Enabled, Scheme = ip.Scheme
-			});
+			}, cancellationToken);
 
 		public Task<IdentityProvider> GetBySchemeAsync(string scheme) =>
-			SingleOrDefaultAsync(ip => ip.Scheme == scheme);
+			GetBySchemeAsync(scheme, CancellationToken.None);
+
+		public Task<IdentityProvider> GetBySchemeAsync(string scheme, CancellationToken cancellationToken) =>
+			SingleOrDefaultAsync(ip => ip.Scheme == scheme, cancellationToken);
 	}
 }

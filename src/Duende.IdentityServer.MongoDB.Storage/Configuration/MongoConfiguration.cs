@@ -8,10 +8,11 @@ namespace Duende.IdentityServer.MongoDB.Storage.Configuration
 	{
 		public static void Initialize()
 		{
-			// Register shared configuration
+			// Register shared conventions
 			MongoConfigurationBase.RegisterConventions("Duende.IdentityServer.MongoDB.Storage Conventions",
 				typeof(Client).Namespace);
 
+			// Register shared ClassMaps
 			MongoConfigurationBase.RegisterClassMaps<Client, PersistedGrant, DeviceFlowCode, DeviceCode>(
 				client => client.ClientId,
 				grant => grant.Key,
