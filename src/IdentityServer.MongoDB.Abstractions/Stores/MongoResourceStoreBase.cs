@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer.MongoDB.Abstractions.Options;
@@ -35,8 +34,6 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 		public Task<IEnumerable<TApiResource>> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames) =>
 			FindApiResourcesByScopeNameAsync(scopeNames, CancellationToken.None);
 
-
-
 		public Task<IEnumerable<TApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> apiResourceNames) =>
 			FindApiResourcesByNameAsync(apiResourceNames, CancellationToken.None);
 
@@ -47,7 +44,7 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 		public Task<TResources> GetAllResourcesAsync() => GetAllResourcesAsync(CancellationToken.None);
 
 		public async Task<TResources> GetAllResourcesAsync(CancellationToken cancellationToken) =>
-			GetResources(await ToListAsync(cancellationToken));
+			GetResources(await ToListAsync(cancellationToken).ConfigureAwait(false));
 
 		// Abstract methods that the child class must define to conform
 		public abstract Task<IEnumerable<TApiResource>> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames,
