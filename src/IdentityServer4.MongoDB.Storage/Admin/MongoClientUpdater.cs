@@ -1,15 +1,22 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer.MongoDB.Abstractions.Admin;
-using IdentityServer.MongoDB.Abstractions.Options;
 using IdentityServer4.Models;
+using IdentityServer4.MongoDB.Storage.Options;
+using MongoDB.Driver;
 
 namespace IdentityServer4.MongoDB.Storage.Admin
 {
-	internal class MongoClientUpdater : MongoStoreUpdaterBase<Client>
+	public class MongoClientUpdater : MongoStoreUpdaterBase<Client>
 	{
-		public MongoClientUpdater(ConfigurationStoreOptions options) : base(
-			options.Database.GetCollection<Client>(options.ClientCollectionName))
+		// ReSharper disable once SuggestBaseTypeForParameter
+		public MongoClientUpdater(ConfigurationStoreOptions options) : this(options.Database,
+			options.ClientCollectionName)
+		{
+		}
+
+		public MongoClientUpdater(IMongoDatabase database, string collectionName) : base(
+			database.GetCollection<Client>(collectionName))
 		{
 		}
 

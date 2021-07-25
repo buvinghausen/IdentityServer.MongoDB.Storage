@@ -1,12 +1,12 @@
-﻿using MongoDB.Driver;
-
+﻿
 namespace IdentityServer.MongoDB.Abstractions.Options
 {
-	class ConfigurationStoreOptions
+	public abstract class ConfigurationStoreOptionsBase : OptionsBase
 	{
-		public IMongoDatabase Database { get; set; }
-
 		public string ClientCollectionName { get; set; } = "Clients";
+
 		public string ResourceCollectionName { get; set; } = "Resources";
+
+		public bool AddConfigurationUpdate { get; set; } = false;
 	}
 }

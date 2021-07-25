@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Configuration
 {
-	internal static class MongoConfiguration
+	public static class MongoConfiguration
 	{
 		public static void Initialize()
 		{

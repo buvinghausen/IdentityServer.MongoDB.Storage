@@ -3,18 +3,24 @@ using System.Threading.Tasks;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.MongoDB.Storage.Options;
 using IdentityServer.MongoDB.Abstractions.Admin;
+using MongoDB.Driver;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Admin
 {
-	internal class MongoIdentityProviderUpdater : MongoStoreUpdaterBase<IdentityProvider>
+	public class MongoIdentityProviderUpdater : MongoStoreUpdaterBase<IdentityProvider>
 	{
-		public MongoIdentityProviderUpdater(ConfigurationStoreOptions options) : base(
-			options.Database.GetCollection<IdentityProvider>(options.IdentityProviderCollectionName))
+		public MongoIdentityProviderUpdater(ConfigurationStoreOptions options) : this(options.Database,
+			options.IdentityProviderCollectionName)
 		{
 		}
 
-		public override Task InsertOrUpdateAsync(IdentityProvider entity,
-			CancellationToken cancellationToken = default) =>
+		public MongoIdentityProviderUpdater(IMongoDatabase database, string collectionName) : base(
+			database.GetCollection<IdentityProvider>(collectionName))
+		{
+		}
+
+		public override Task
+			InsertOrUpdateAsync(IdentityProvider entity, CancellationToken cancellationToken = default) =>
 			InsertOrUpdateAsync(ip => ip.Scheme == entity.Scheme, entity, cancellationToken);
 	}
 }

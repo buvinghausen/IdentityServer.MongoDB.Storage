@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Linq.Expressions;
-using IdentityServer.MongoDB.Abstractions.Options;
 using IdentityServer.MongoDB.Abstractions.Stores;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
+using IdentityServer4.MongoDB.Storage.Options;
 using IdentityServer4.Stores;
 
 namespace IdentityServer4.MongoDB.Storage.Stores
 {
 	internal class MongoPersistedGrantStore : MongoPersistedGrantStoreBase<PersistedGrant, PersistedGrantFilter>, IPersistedGrantStore
 	{
+		// ReSharper disable once SuggestBaseTypeForParameter
 		public MongoPersistedGrantStore(OperationalStoreOptions options) : base(options)
 		{
 		}

@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer.MongoDB.Abstractions.Options;
 using IdentityServer.MongoDB.Abstractions.Stores;
 using IdentityServer4.Models;
+using IdentityServer4.MongoDB.Storage.Options;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 
@@ -11,6 +11,7 @@ namespace IdentityServer4.MongoDB.Storage.Stores
 	// This class just provides the IdentityServer4 versions of Client & IClientStore
 	internal class MongoClientStore : MongoClientStoreBase<Client>, IClientStore, ICorsPolicyService
 	{
+		// ReSharper disable once SuggestBaseTypeForParameter
 		public MongoClientStore(ConfigurationStoreOptions options) : base(options)
 		{
 		}

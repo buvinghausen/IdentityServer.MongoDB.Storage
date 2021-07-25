@@ -13,7 +13,7 @@ namespace IdentityServer.MongoDB.Abstractions.Services
 		private readonly TimeSpan _interval;
 		private readonly IOperationalStore[] _operationalStores;
 
-		public TokenCleanupService(OperationalStoreOptions options, IEnumerable<IOperationalStore> operationalStores)
+		public TokenCleanupService(OperationalStoreOptionsBase options, IEnumerable<IOperationalStore> operationalStores)
 		{
 			_interval = options.TokenCleanupInterval;
 			_operationalStores = operationalStores.ToArray();

@@ -1,8 +1,8 @@
-﻿using ConfigurationStoreOptionsBase = IdentityServer.MongoDB.Abstractions.Options.ConfigurationStoreOptions;
+﻿using IdentityServer.MongoDB.Abstractions.Options;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Options
 {
-	internal class ConfigurationStoreOptions : ConfigurationStoreOptionsBase
+	public class ConfigurationStoreOptions : ConfigurationStoreOptionsBase
 	{
 		public string IdentityProviderCollectionName { get; set; } = "IdentityProviders";
 		public string SigningKeyCollectionName { get; set; } = "SigningKeys";

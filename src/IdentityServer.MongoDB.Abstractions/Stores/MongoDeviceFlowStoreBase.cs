@@ -15,7 +15,7 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 		where TModel : class
 		where TEntity : DeviceFlowCodeBase<TModel>, new()
 	{
-		protected MongoDeviceFlowStoreBase(OperationalStoreOptions options) : base(options.Database,
+		protected MongoDeviceFlowStoreBase(OperationalStoreOptionsBase options) : base(options.Database,
 			options.DeviceFlowCollectionName)
 		{
 		}

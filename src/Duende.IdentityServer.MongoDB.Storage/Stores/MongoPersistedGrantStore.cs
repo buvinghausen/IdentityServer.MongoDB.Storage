@@ -2,8 +2,8 @@
 using System.Linq.Expressions;
 using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Models;
+using Duende.IdentityServer.MongoDB.Storage.Options;
 using Duende.IdentityServer.Stores;
-using IdentityServer.MongoDB.Abstractions.Options;
 using IdentityServer.MongoDB.Abstractions.Stores;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Stores
@@ -11,6 +11,7 @@ namespace Duende.IdentityServer.MongoDB.Storage.Stores
 	internal class MongoPersistedGrantStore : MongoPersistedGrantStoreBase<PersistedGrant, PersistedGrantFilter>,
 		IPersistedGrantStore
 	{
+		// ReSharper disable once SuggestBaseTypeForParameter
 		public MongoPersistedGrantStore(OperationalStoreOptions options) : base(options)
 		{
 		}

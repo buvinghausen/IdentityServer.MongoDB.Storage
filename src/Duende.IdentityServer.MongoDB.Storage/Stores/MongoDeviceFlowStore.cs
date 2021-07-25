@@ -2,14 +2,15 @@
 using System.Linq.Expressions;
 using System.Security.Claims;
 using Duende.IdentityServer.Models;
+using Duende.IdentityServer.MongoDB.Storage.Options;
 using Duende.IdentityServer.Stores;
-using IdentityServer.MongoDB.Abstractions.Options;
 using IdentityServer.MongoDB.Abstractions.Stores;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Stores
 {
 	internal class MongoDeviceFlowStore : MongoDeviceFlowStoreBase<DeviceCode, DeviceFlowCode>, IDeviceFlowStore
 	{
+		// ReSharper disable once SuggestBaseTypeForParameter
 		public MongoDeviceFlowStore(OperationalStoreOptions options) : base(options)
 		{
 		}

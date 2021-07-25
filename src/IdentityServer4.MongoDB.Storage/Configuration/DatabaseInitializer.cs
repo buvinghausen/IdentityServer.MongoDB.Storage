@@ -1,30 +1,38 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer.MongoDB.Abstractions.Configuration;
-using IdentityServer.MongoDB.Abstractions.Options;
 using IdentityServer4.Models;
+using IdentityServer4.MongoDB.Storage.Options;
 
 namespace IdentityServer4.MongoDB.Storage.Configuration
 {
-	internal class DatabaseInitializer : DatabaseInitializerBase
+	public class DatabaseInitializer
 	{
-		public DatabaseInitializer(ConfigurationStoreOptions configurationStoreOptions, OperationalStoreOptions operationalStoreOptions) : base(configurationStoreOptions, operationalStoreOptions)
+		private readonly ConfigurationStoreOptions _configurationStoreOptions;
+		private readonly OperationalStoreOptions _operationalStoreOptions;
+
+		public DatabaseInitializer(ConfigurationStoreOptions configurationStoreOptions, OperationalStoreOptions operationalStoreOptions)
 		{
+			_configurationStoreOptions = configurationStoreOptions;
+			_operationalStoreOptions = operationalStoreOptions;
 		}
 
-		public DatabaseInitializer(ConfigurationStoreOptions configurationStoreOptions) : base(configurationStoreOptions)
+		public DatabaseInitializer(ConfigurationStoreOptions configurationStoreOptions)
 		{
+			_configurationStoreOptions = configurationStoreOptions;
 		}
 
-		public DatabaseInitializer(OperationalStoreOptions operationalStoreOptions) : base(operationalStoreOptions: operationalStoreOptions)
+		public DatabaseInitializer(OperationalStoreOptions operationalStoreOptions)
 		{
+			_operationalStoreOptions = operationalStoreOptions;
 		}
 
-		public override Task InitializeConfigurationStoreAsync(CancellationToken cancellationToken = default) =>
-			InitializeConfigurationStoreAsync<Client, Resource>(c => c.AllowedCorsOrigins, r => r.Name, new string[0], cancellationToken);
+		public Task InitializeConfigurationStoreAsync(CancellationToken cancellationToken = default) =>
+			DatabaseInitializerBase.InitializeConfigurationStoreAsync<Client, Resource>(c => c.AllowedCorsOrigins, r => r.Name,
+				new string[0], _configurationStoreOptions, cancellationToken);
 
-		public override Task InitializeOperationalStoreAsync(CancellationToken cancellationToken = default) =>
-			InitializeOperationalStoreAsync<DeviceFlowCode, PersistedGrant>(
+		public Task InitializeOperationalStoreAsync(CancellationToken cancellationToken = default) =>
+			DatabaseInitializerBase.InitializeOperationalStoreAsync<DeviceFlowCode, PersistedGrant>(
 				dc => dc.UserCode,
 				dc => dc.Expiration,
 				pg => pg.SubjectId,
@@ -33,6 +41,7 @@ namespace IdentityServer4.MongoDB.Storage.Configuration
 				pg => pg.Type,
 				pg => pg.Expiration,
 				pg => pg.ConsumedTime,
+				_operationalStoreOptions,
 				cancellationToken);
 	}
 }

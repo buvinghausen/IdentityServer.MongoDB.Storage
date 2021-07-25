@@ -10,49 +10,40 @@ using MongoDB.Driver;
 
 namespace IdentityServer.MongoDB.Abstractions.Configuration
 {
-	internal abstract class DatabaseInitializerBase
+	internal static class DatabaseInitializerBase
 	{
-		private readonly ConfigurationStoreOptions _configurationStoreOptions;
-		private readonly OperationalStoreOptions _operationalStoreOptions;
-
-		private readonly CreateCollectionOptions _options = new()
+		private static readonly CreateCollectionOptions Options = new()
 		{
 			Collation = new Collation(CultureInfo.CurrentCulture.Name, strength: CollationStrength.Secondary)
 		};
 
-		protected DatabaseInitializerBase(ConfigurationStoreOptions configurationStoreOptions = default, OperationalStoreOptions operationalStoreOptions = default)
-		{
-			_configurationStoreOptions = configurationStoreOptions;
-			_operationalStoreOptions = operationalStoreOptions;
-		}
-
 		// Sets up the Clients & Resources collections and indexes
-		public abstract Task InitializeConfigurationStoreAsync(CancellationToken cancellationToken = default);
-
-		protected async Task InitializeConfigurationStoreAsync<TClient, TResource>(
+		public static async Task InitializeConfigurationStoreAsync<TClient, TResource>(
 			Expression<Func<TClient, object>> corsOriginsSelector,
 			Expression<Func<TResource, object>> nameSelector,
 			IEnumerable<string> additionalCollectionNames,
+			ConfigurationStoreOptionsBase configurationStoreOptions,
 			CancellationToken cancellationToken = default)
 		{
-			if (_configurationStoreOptions is null)
+			if (configurationStoreOptions is null)
 				return;
 
 			// Step 1 create the collections with case insensitive collation to match SQL Server defaults
-			await CreateCollectionsAsync(_configurationStoreOptions.Database,
-				new[] { _configurationStoreOptions.ClientCollectionName, _configurationStoreOptions.ResourceCollectionName }.Concat(
-					additionalCollectionNames), cancellationToken).ConfigureAwait(false);
+			await CreateCollectionsAsync(configurationStoreOptions.Database,
+				new[] { configurationStoreOptions.ClientCollectionName, configurationStoreOptions.ResourceCollectionName }
+					.Concat(
+						additionalCollectionNames), cancellationToken).ConfigureAwait(false);
 
 			// Step 2 create the unique index on the Resources collection which is a unique composite key of name & the type discriminator
 			await Task.WhenAll(
-				_configurationStoreOptions.Database
-					.GetCollection<TClient>(_configurationStoreOptions.ResourceCollectionName).Indexes
+				configurationStoreOptions.Database
+					.GetCollection<TClient>(configurationStoreOptions.ResourceCollectionName).Indexes
 					.CreateOneAsync(Builders<TClient>.IndexKeys
 							.Ascending(corsOriginsSelector),
 						new CreateIndexOptions { Background = true, Name = "ix_allowedCorsOrigins", Unique = false },
 						cancellationToken),
-				_configurationStoreOptions.Database
-					.GetCollection<TResource>(_configurationStoreOptions.ResourceCollectionName).Indexes
+				configurationStoreOptions.Database
+					.GetCollection<TResource>(configurationStoreOptions.ResourceCollectionName).Indexes
 					.CreateOneAsync(Builders<TResource>.IndexKeys
 							.Ascending(nameSelector)
 							.Ascending(new StringFieldDefinition<TResource>("_t")),
@@ -61,9 +52,7 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 		}
 
 		// Sets up the DeviceCodes & PersistedGrants collections and indexes
-		public abstract Task InitializeOperationalStoreAsync(CancellationToken cancellationToken = default);
-
-		protected async Task InitializeOperationalStoreAsync<TDeviceCode, TPersistedGrant>(
+		public static async Task InitializeOperationalStoreAsync<TDeviceCode, TPersistedGrant>(
 			Expression<Func<TDeviceCode, object>> deviceCodeSelector,
 			Expression<Func<TDeviceCode, object>> deviceCodeExpirationSelector,
 			Expression<Func<TPersistedGrant, object>> persistedGrantSubjectIdSelector,
@@ -72,14 +61,19 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 			Expression<Func<TPersistedGrant, object>> persistedGrantTypeSelector,
 			Expression<Func<TPersistedGrant, object>> persistedGrantExpirationSelector,
 			Expression<Func<TPersistedGrant, object>> persistedGrantConsumedSelector,
+			OperationalStoreOptionsBase operationalStoreOptions,
 			CancellationToken cancellationToken = default)
 		{
-			if (_operationalStoreOptions is null)
+			if (operationalStoreOptions is null)
 				return;
 
 			// Step 1 create the collections with case insensitive collation to match SQL Server defaults
-			await CreateCollectionsAsync(_operationalStoreOptions.Database,
-				new[] { _operationalStoreOptions.DeviceFlowCollectionName, _operationalStoreOptions.PersistedGrantCollectionName },
+			await CreateCollectionsAsync(operationalStoreOptions.Database,
+				new[]
+				{
+					operationalStoreOptions.DeviceFlowCollectionName,
+					operationalStoreOptions.PersistedGrantCollectionName
+				},
 				cancellationToken).ConfigureAwait(false);
 
 			// Step 2 create the indexes on both collections
@@ -87,8 +81,9 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 			var grantIxBuilder = Builders<TPersistedGrant>.IndexKeys;
 
 			await Task.WhenAll(
-				_operationalStoreOptions.Database
-					.GetCollection<TDeviceCode>(_operationalStoreOptions.DeviceFlowCollectionName).Indexes.CreateManyAsync(
+				operationalStoreOptions.Database
+					.GetCollection<TDeviceCode>(operationalStoreOptions.DeviceFlowCollectionName).Indexes
+					.CreateManyAsync(
 						new CreateIndexModel<TDeviceCode>[]
 						{
 							new(deviceIxBuilder
@@ -98,8 +93,8 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 									.Ascending(deviceCodeExpirationSelector),
 								new CreateIndexOptions {Background = true, Name = "ix_expiration", Unique = false})
 						}, cancellationToken),
-				_operationalStoreOptions.Database
-					.GetCollection<TPersistedGrant>(_operationalStoreOptions.PersistedGrantCollectionName).Indexes
+				operationalStoreOptions.Database
+					.GetCollection<TPersistedGrant>(operationalStoreOptions.PersistedGrantCollectionName).Indexes
 					.CreateManyAsync(new CreateIndexModel<TPersistedGrant>[]
 					{
 						new(grantIxBuilder
@@ -128,7 +123,8 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 			).ConfigureAwait(false);
 		}
 
-		private Task CreateCollectionsAsync(IMongoDatabase database, IEnumerable<string> names, CancellationToken cancellationToken) =>
-			Task.WhenAll(names.Select(name => database.CreateCollectionAsync(name, _options, cancellationToken)));
+		private static Task CreateCollectionsAsync(IMongoDatabase database, IEnumerable<string> names,
+			CancellationToken cancellationToken) =>
+			Task.WhenAll(names.Select(name => database.CreateCollectionAsync(name, Options, cancellationToken)));
 	}
 }

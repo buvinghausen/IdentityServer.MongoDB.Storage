@@ -1,12 +1,9 @@
 ﻿using System;
-using MongoDB.Driver;
 
 namespace IdentityServer.MongoDB.Abstractions.Options
 {
-	class OperationalStoreOptions
+	public abstract class OperationalStoreOptionsBase : OptionsBase
 	{
-		public IMongoDatabase Database { get; set; }
-
 		public bool EnableTokenCleanup { get; set; } = false;
 
 		public bool RemoveConsumedTokens { get; set; } = false;
@@ -14,6 +11,7 @@ namespace IdentityServer.MongoDB.Abstractions.Options
 		public TimeSpan TokenCleanupInterval { get; set; } = TimeSpan.FromHours(1);
 
 		public string DeviceFlowCollectionName { get; set; } = "DeviceCodes";
+
 		public string PersistedGrantCollectionName { get; set; } = "PersistedGrant";
 	}
 }

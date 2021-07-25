@@ -10,7 +10,7 @@ namespace IdentityServer.MongoDB.Abstractions.Stores
 		where TApiResource : TResource
 		where TApiScope : TResource
 	{
-		protected MongoResourceStoreBase(ConfigurationStoreOptions options) : base(options.Database,
+		protected MongoResourceStoreBase(ConfigurationStoreOptionsBase options) : base(options.Database,
 			options.ResourceCollectionName)
 		{
 		}

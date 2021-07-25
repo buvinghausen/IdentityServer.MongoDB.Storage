@@ -3,7 +3,7 @@ using IdentityServer4.Models;
 
 namespace IdentityServer4.MongoDB.Storage.Configuration
 {
-	internal static class MongoConfiguration
+	public static class MongoConfiguration
 	{
 		public static void Initialize()
 		{
