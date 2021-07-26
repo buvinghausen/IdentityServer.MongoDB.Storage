@@ -1,10 +1,10 @@
 ﻿using System;
-using Duende.IdentityServer.Models;
-using Duende.IdentityServer.MongoDB.Storage.Admin;
-using Duende.IdentityServer.MongoDB.Storage.Configuration;
-using Duende.IdentityServer.MongoDB.Storage.Options;
 using IdentityServer.MongoDB.Abstractions.Admin;
 using IdentityServer.MongoDB.Abstractions.Configuration;
+using IdentityServer4.Models;
+using IdentityServer4.MongoDB.Storage.Admin;
+using IdentityServer4.MongoDB.Storage.Configuration;
+using IdentityServer4.MongoDB.Storage.Options;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 // ReSharper disable once CheckNamespace
@@ -23,12 +23,11 @@ namespace Microsoft.Extensions.DependencyInjection
 			services
 				.AddSingleton(options)
 				.TryAddTransient<IDatabaseInitializer, DatabaseInitializer>();
-			return  services.AddTransient<IConfigurationStoreUpdater<Client>, MongoClientUpdater>()
+			return services
+				.AddTransient<IConfigurationStoreUpdater<Client>, MongoClientUpdater>()
 				.AddTransient<IConfigurationStoreUpdater<ApiResource>, MongoResourceUpdater<ApiResource>>()
 				.AddTransient<IConfigurationStoreUpdater<ApiScope>, MongoResourceUpdater<ApiScope>>()
-				.AddTransient<IConfigurationStoreUpdater<IdentityResource>, MongoResourceUpdater<IdentityResource>>()
-				.AddTransient<IConfigurationStoreUpdater<IdentityProvider>, MongoIdentityProviderUpdater>()
-				.AddTransient<IConfigurationStoreUpdater<SerializedKey>, MongoSigningKeyUpdater>();
+				.AddTransient<IConfigurationStoreUpdater<IdentityResource>, MongoResourceUpdater<IdentityResource>>();
 		}
 
 		public static IServiceCollection AddIdentityServerOperationalStoreAdmin(this IServiceCollection services,

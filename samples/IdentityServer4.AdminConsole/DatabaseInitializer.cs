@@ -1,34 +1,27 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Duende.IdentityServer.Models;
 using IdentityServer.MongoDB.Abstractions.Admin;
 using IdentityServer.MongoDB.Abstractions.Configuration;
+using IdentityServer4.Models;
 using Microsoft.Extensions.Hosting;
 
-namespace Duende.IdentityServer.AdminConsole
+namespace IdentityServer4.AdminConsole
 {
-	/// <summary>
-	/// 
-	/// </summary>
-    internal class DatabaseInitializer : IHostedService
+	internal class DatabaseInitializer : IHostedService
 	{
 		private readonly IDatabaseInitializer _databaseInitializer;
 		private readonly IConfigurationStoreUpdater<Client> _clientUpdater;
 		private readonly IConfigurationStoreUpdater<ApiResource> _apiResourceUpdater;
 		private readonly IConfigurationStoreUpdater<ApiScope> _apiScopeUpdater;
 		private readonly IConfigurationStoreUpdater<IdentityResource> _identityResourceUpdater;
-		private readonly IConfigurationStoreUpdater<IdentityProvider> _identityProviderUpdater;
-		private readonly IConfigurationStoreUpdater<SerializedKey> _signingKeyUpdater;
 
-		public DatabaseInitializer(IDatabaseInitializer databaseInitializer, IConfigurationStoreUpdater<Client> clientUpdater, IConfigurationStoreUpdater<ApiResource> apiResourceUpdater, IConfigurationStoreUpdater<ApiScope> apiScopeUpdater, IConfigurationStoreUpdater<IdentityResource> identityResourceUpdater, IConfigurationStoreUpdater<IdentityProvider> identityProviderUpdater, IConfigurationStoreUpdater<SerializedKey> signingKeyUpdater)
+		public DatabaseInitializer(IDatabaseInitializer databaseInitializer, IConfigurationStoreUpdater<Client> clientUpdater, IConfigurationStoreUpdater<ApiResource> apiResourceUpdater, IConfigurationStoreUpdater<ApiScope> apiScopeUpdater, IConfigurationStoreUpdater<IdentityResource> identityResourceUpdater)
 		{
 			_databaseInitializer = databaseInitializer;
 			_clientUpdater = clientUpdater;
 			_apiResourceUpdater = apiResourceUpdater;
 			_apiScopeUpdater = apiScopeUpdater;
 			_identityResourceUpdater = identityResourceUpdater;
-			_identityProviderUpdater = identityProviderUpdater;
-			_signingKeyUpdater = signingKeyUpdater;
 		}
 
 		public async Task StartAsync(CancellationToken cancellationToken)

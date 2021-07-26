@@ -8,7 +8,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using SequentialGuid;
 
-namespace Duende.IdentityServer.AdminConsole
+namespace IdentityServer4.AdminConsole
 {
 	internal class Program
 	{

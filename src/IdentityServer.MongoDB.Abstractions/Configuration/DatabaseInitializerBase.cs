@@ -129,14 +129,14 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 		{
 			// Mongo really should have a better way of doing this but this is a framework component
 			// So the pain is hidden here this is the list of desired collections that are not present
-			names = (await (await database
+			names = names.Except((await (await database
 					.ListCollectionsAsync(
 						new ListCollectionsOptions
 						{
 							Filter = new BsonDocument("name", new BsonDocument("$in", new BsonArray(names)))
 						}, cancellationToken)
 					.ConfigureAwait(false)).ToListAsync(cancellationToken).ConfigureAwait(false))
-				.Select(bd => bd["name"].AsString).Except(names).ToList();
+				.Select(bd => bd["name"].AsString)).ToList();
 
 			// If all the collections are present simply return
 			if (!names.Any()) return;

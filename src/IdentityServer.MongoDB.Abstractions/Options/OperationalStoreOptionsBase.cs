@@ -12,6 +12,6 @@ namespace IdentityServer.MongoDB.Abstractions.Options
 
 		public string DeviceFlowCollectionName { get; set; } = "DeviceCodes";
 
-		public string PersistedGrantCollectionName { get; set; } = "PersistedGrant";
+		public string PersistedGrantCollectionName { get; set; } = "PersistedGrants";
 	}
 }
