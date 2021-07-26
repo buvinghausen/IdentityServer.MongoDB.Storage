@@ -27,6 +27,13 @@ namespace Duende.IdentityServer.AdminConsole
 		private readonly IConfigurationStoreUpdater<IdentityResource> _identityResourceUpdater;
 		private readonly IConfigurationStoreUpdater<IdentityProvider> _identityProviderUpdater;
 
+		// This constructor is here for the operational store only setup
+		public DatabaseInitializer(IDatabaseInitializer databaseInitializer)
+		{
+			_databaseInitializer = databaseInitializer;
+		}
+
+		// This constructor will be called when the configuration store has been added
 		public DatabaseInitializer(IDatabaseInitializer databaseInitializer,
 			IConfigurationStoreUpdater<Client> clientUpdater,
 			IConfigurationStoreUpdater<ApiResource> apiResourceUpdater,
@@ -50,6 +57,10 @@ namespace Duende.IdentityServer.AdminConsole
 			await Task.WhenAll(
 				_databaseInitializer.InitializeConfigurationStoreAsync(cancellationToken),
 				_databaseInitializer.InitializeOperationalStoreAsync(cancellationToken));
+
+			// Configuration store updater configuration not loaded in service collection so just exit
+			if (_clientUpdater is null)
+				return;
 
 			// Step 2 - Cleanup the tables to simulate a new configuration (please do not do this in your own app)
 			await Task.WhenAll(

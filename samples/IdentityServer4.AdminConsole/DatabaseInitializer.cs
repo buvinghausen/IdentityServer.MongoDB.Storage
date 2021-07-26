@@ -22,6 +22,13 @@ namespace IdentityServer4.AdminConsole
 		private readonly IConfigurationStoreUpdater<ApiScope> _apiScopeUpdater;
 		private readonly IConfigurationStoreUpdater<IdentityResource> _identityResourceUpdater;
 
+		// This constructor is here for the operational store only setup
+		public DatabaseInitializer(IDatabaseInitializer databaseInitializer)
+		{
+			_databaseInitializer = databaseInitializer;
+		}
+
+		// This constructor will be called when the configuration store has been added
 		public DatabaseInitializer(IDatabaseInitializer databaseInitializer,
 			IConfigurationStoreUpdater<Client> clientUpdater,
 			IConfigurationStoreUpdater<ApiResource> apiResourceUpdater,
@@ -43,6 +50,10 @@ namespace IdentityServer4.AdminConsole
 			await Task.WhenAll(
 				_databaseInitializer.InitializeConfigurationStoreAsync(cancellationToken),
 				_databaseInitializer.InitializeOperationalStoreAsync(cancellationToken));
+
+			// Configuration store updater configuration not loaded in service collection so just exit
+			if (_clientUpdater is null)
+				return;
 
 			// Step 2 - Cleanup the tables to simulate a new configuration (please do not do this in your own app)
 			await Task.WhenAll(
