@@ -26,15 +26,13 @@ namespace Duende.IdentityServer.AdminConsole
 		private readonly IConfigurationStoreUpdater<ApiScope> _apiScopeUpdater;
 		private readonly IConfigurationStoreUpdater<IdentityResource> _identityResourceUpdater;
 		private readonly IConfigurationStoreUpdater<IdentityProvider> _identityProviderUpdater;
-		private readonly IConfigurationStoreUpdater<SerializedKey> _signingKeyUpdater;
 
 		public DatabaseInitializer(IDatabaseInitializer databaseInitializer,
 			IConfigurationStoreUpdater<Client> clientUpdater,
 			IConfigurationStoreUpdater<ApiResource> apiResourceUpdater,
 			IConfigurationStoreUpdater<ApiScope> apiScopeUpdater,
 			IConfigurationStoreUpdater<IdentityResource> identityResourceUpdater,
-			IConfigurationStoreUpdater<IdentityProvider> identityProviderUpdater,
-			IConfigurationStoreUpdater<SerializedKey> signingKeyUpdater)
+			IConfigurationStoreUpdater<IdentityProvider> identityProviderUpdater)
 		{
 			_databaseInitializer = databaseInitializer;
 			_clientUpdater = clientUpdater;
@@ -42,7 +40,6 @@ namespace Duende.IdentityServer.AdminConsole
 			_apiScopeUpdater = apiScopeUpdater;
 			_identityResourceUpdater = identityResourceUpdater;
 			_identityProviderUpdater = identityProviderUpdater;
-			_signingKeyUpdater = signingKeyUpdater;
 		}
 
 		public async Task StartAsync(CancellationToken cancellationToken)
@@ -60,8 +57,7 @@ namespace Duende.IdentityServer.AdminConsole
 				_apiResourceUpdater.DeleteManyAsync(_ => true, cancellationToken),
 				_apiScopeUpdater.DeleteManyAsync(_ => true, cancellationToken),
 				_identityResourceUpdater.DeleteManyAsync(_ => true, cancellationToken),
-				_identityProviderUpdater.DeleteManyAsync(_ => true, cancellationToken),
-				_signingKeyUpdater.DeleteManyAsync(_ => true, cancellationToken));
+				_identityProviderUpdater.DeleteManyAsync(_ => true, cancellationToken));
 
 			// Step 3 - Create configuration store documents of every type in the database
 			var profile = new IdentityResources.Profile();
