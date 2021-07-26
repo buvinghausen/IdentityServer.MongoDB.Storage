@@ -13,7 +13,7 @@ namespace Duende.IdentityServer.MongoDB.Storage.Configuration
 				typeof(Client).Namespace);
 
 			// Register shared ClassMaps
-			MongoConfigurationBase.RegisterClassMaps<Client, PersistedGrant, DeviceFlowCode, DeviceCode>(
+			MongoConfigurationBase.RegisterClassMaps<Client, PersistedGrant, DeviceFlowCode, DeviceCode, ApiResource, ApiScope, IdentityResource>(
 				client => client.ClientId,
 				grant => grant.Key,
 				code => code.UserCode,

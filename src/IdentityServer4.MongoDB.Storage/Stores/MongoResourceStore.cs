@@ -19,7 +19,8 @@ namespace IdentityServer4.MongoDB.Storage.Stores
 
 		public override Task<IEnumerable<ApiResource>> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames,
 			CancellationToken cancellationToken) =>
-			ToEnumerableAsync<ApiResource>(r => r.Scopes.Any(scopeNames.Contains), cancellationToken);
+			// ReSharper disable once ConvertClosureToMethodGroup (mongo doesn't like ConstantExpressions)
+			ToEnumerableAsync<ApiResource>(r => r.Scopes.Any(s => scopeNames.Contains(s)), cancellationToken);
 
 		protected override Task<IEnumerable<T>> FindResourcesByName<T>(IEnumerable<string> names,
 			CancellationToken cancellationToken = default) =>

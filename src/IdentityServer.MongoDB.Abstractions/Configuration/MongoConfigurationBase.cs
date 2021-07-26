@@ -22,12 +22,17 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 					new IgnoreExtraElementsConvention(true) // <- This has to be explicitly here so the Resource polymorphism works and to make it resilient against possible future schema changes
 				}, t => t.Namespace == defaultNamespace || t.Namespace == "IdentityServer.MongoDB.Abstractions.Entities");
 
-		internal static void RegisterClassMaps<TClient, TPersistedGrant, TDeviceCodeEntity, TDeviceCodeModel>(
+		internal static void RegisterClassMaps<TClient, TPersistedGrant, TDeviceCodeEntity, TDeviceCodeModel, TApiResource, TApiScope, TIdentityResource>(
 			Expression<Func<TClient, string>> clientIdSelector,
 			Expression<Func<TPersistedGrant, string>> keySelector,
 			Expression<Func<TDeviceCodeEntity, string>> userCodeSelector,
 			Expression<Func<TDeviceCodeModel, ClaimsPrincipal>> subjectSelector)
 		{
+			// These must be mapped so you can run GetAllResources() as the first call on IResourceStore
+			BsonClassMap.RegisterClassMap<TApiResource>();
+			BsonClassMap.RegisterClassMap<TApiScope>();
+			BsonClassMap.RegisterClassMap<TIdentityResource>();
+
 			// Set ClientId to be Mongo's primary key
 			BsonClassMap.RegisterClassMap<TClient>(cm =>
 			{
