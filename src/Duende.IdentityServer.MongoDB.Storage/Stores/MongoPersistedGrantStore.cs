@@ -35,9 +35,11 @@ namespace Duende.IdentityServer.MongoDB.Storage.Stores
 
 		protected override Expression<Func<PersistedGrant, string>> TypeSelector => grant => grant.Type;
 
-		protected override Expression<Func<PersistedGrant, bool>> TokenCleanupFilter => grant =>
-			RemoveConsumedTokens
-				? grant.Expiration < DateTime.UtcNow || grant.ConsumedTime < DateTime.UtcNow
-				: grant.Expiration < DateTime.UtcNow;
+		// Yield back the predicate expression on both sides of the ternary for Mongo to decipher correctly
+		protected override Expression<Func<PersistedGrant, bool>> TokenCleanupFilter => RemoveConsumedTokens
+			? grant =>
+				grant.Expiration < DateTime.UtcNow || grant.ConsumedTime < DateTime.UtcNow
+			: grant =>
+				grant.Expiration < DateTime.UtcNow;
 	}
 }
