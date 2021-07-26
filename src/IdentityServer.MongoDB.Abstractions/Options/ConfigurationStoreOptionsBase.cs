@@ -7,6 +7,6 @@ namespace IdentityServer.MongoDB.Abstractions.Options
 
 		public string ResourceCollectionName { get; set; } = "Resources";
 
-		public bool AddConfigurationUpdate { get; set; } = false;
+		public bool AddConfigurationStoreUpdate { get; set; } = false;
 	}
 }
