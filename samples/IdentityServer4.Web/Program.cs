@@ -46,6 +46,7 @@ namespace IdentityServer4.Web
 							.AddIdentityServer(options =>
 								options.EmitStaticAudienceClaim =
 									true) // https://docs.duendesoftware.com/identityserver/v5/fundamentals/resources/
+							.AddDeveloperSigningCredential()
 							.AddConfigurationStore(options => options.Database = database)
 							.AddOperationalStore(options =>
 							{
