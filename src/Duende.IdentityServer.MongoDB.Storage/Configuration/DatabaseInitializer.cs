@@ -10,17 +10,11 @@ namespace Duende.IdentityServer.MongoDB.Storage.Configuration
 	{
 		private readonly ConfigurationStoreOptions _configurationStoreOptions;
 		private readonly OperationalStoreOptions _operationalStoreOptions;
-		private readonly string[] _additionalNames;
 
 		// ReSharper disable SuggestBaseTypeForParameter
 		public DatabaseInitializer(ConfigurationStoreOptions configurationStoreOptions,
 			OperationalStoreOptions operationalStoreOptions)
 		{
-			_additionalNames = new[]
-			{
-				configurationStoreOptions.IdentityProviderCollectionName,
-				configurationStoreOptions.SigningKeyCollectionName
-			};
 			_configurationStoreOptions = configurationStoreOptions;
 			_operationalStoreOptions = operationalStoreOptions;
 		}
@@ -32,7 +26,6 @@ namespace Duende.IdentityServer.MongoDB.Storage.Configuration
 
 		public DatabaseInitializer(OperationalStoreOptions operationalStoreOptions)
 		{
-			_additionalNames = new string[0];
 			_operationalStoreOptions = operationalStoreOptions;
 		}
 		// ReSharper restore SuggestBaseTypeForParameter
@@ -41,7 +34,8 @@ namespace Duende.IdentityServer.MongoDB.Storage.Configuration
 			DatabaseInitializerBase.InitializeConfigurationStoreAsync<Client, Resource>(
 				c => c.AllowedCorsOrigins,
 				r => r.Name,
-				_additionalNames, _configurationStoreOptions, cancellationToken);
+				new[] { _configurationStoreOptions?.IdentityProviderCollectionName }, _configurationStoreOptions,
+				cancellationToken);
 
 		public Task InitializeOperationalStoreAsync(CancellationToken cancellationToken = default) =>
 			DatabaseInitializerBase.InitializeOperationalStoreAsync<DeviceFlowCode, PersistedGrant>(
@@ -53,6 +47,7 @@ namespace Duende.IdentityServer.MongoDB.Storage.Configuration
 				pg => pg.Type,
 				pg => pg.Expiration,
 				pg => pg.ConsumedTime,
+				new []{ _operationalStoreOptions?.SigningKeyCollectionName },
 				_operationalStoreOptions,
 				cancellationToken);
 	}

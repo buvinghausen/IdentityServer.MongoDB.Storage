@@ -41,6 +41,7 @@ namespace IdentityServer4.MongoDB.Storage.Configuration
 				pg => pg.Type,
 				pg => pg.Expiration,
 				pg => pg.ConsumedTime,
+				new string[0],
 				_operationalStoreOptions,
 				cancellationToken);
 	}

@@ -27,8 +27,7 @@ namespace Microsoft.Extensions.DependencyInjection
 				.AddTransient<IConfigurationStoreUpdater<ApiResource>, MongoResourceUpdater<ApiResource>>()
 				.AddTransient<IConfigurationStoreUpdater<ApiScope>, MongoResourceUpdater<ApiScope>>()
 				.AddTransient<IConfigurationStoreUpdater<IdentityResource>, MongoResourceUpdater<IdentityResource>>()
-				.AddTransient<IConfigurationStoreUpdater<IdentityProvider>, MongoIdentityProviderUpdater>()
-				.AddTransient<IConfigurationStoreUpdater<SerializedKey>, MongoSigningKeyUpdater>();
+				.AddTransient<IConfigurationStoreUpdater<IdentityProvider>, MongoIdentityProviderUpdater>();
 		}
 
 		public static IServiceCollection AddIdentityServerOperationalStoreAdmin(this IServiceCollection services,

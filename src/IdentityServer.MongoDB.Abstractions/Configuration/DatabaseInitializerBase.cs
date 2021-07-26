@@ -32,8 +32,7 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 			// Step 1 create the collections with case insensitive collation to match SQL Server defaults
 			await CreateCollectionsAsync(configurationStoreOptions.Database,
 				new[] { configurationStoreOptions.ClientCollectionName, configurationStoreOptions.ResourceCollectionName }
-					.Concat(
-						additionalCollectionNames).ToList(), cancellationToken).ConfigureAwait(false);
+					.Concat(additionalCollectionNames).ToList(), cancellationToken).ConfigureAwait(false);
 
 			// Step 2 create the unique index on the Resources collection which is a unique composite key of name & the type discriminator
 			await Task.WhenAll(
@@ -62,6 +61,7 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 			Expression<Func<TPersistedGrant, object>> persistedGrantTypeSelector,
 			Expression<Func<TPersistedGrant, object>> persistedGrantExpirationSelector,
 			Expression<Func<TPersistedGrant, object>> persistedGrantConsumedSelector,
+			IEnumerable<string> additionalCollectionNames,
 			OperationalStoreOptionsBase operationalStoreOptions,
 			CancellationToken cancellationToken = default)
 		{
@@ -74,7 +74,7 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 				{
 					operationalStoreOptions.DeviceFlowCollectionName,
 					operationalStoreOptions.PersistedGrantCollectionName
-				},
+				}.Concat(additionalCollectionNames).ToList(),
 				cancellationToken).ConfigureAwait(false);
 
 			// Step 2 create the indexes on both collections

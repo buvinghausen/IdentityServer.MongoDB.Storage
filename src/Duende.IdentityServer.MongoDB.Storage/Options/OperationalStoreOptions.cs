@@ -4,5 +4,6 @@ namespace Duende.IdentityServer.MongoDB.Storage.Options
 {
 	public class OperationalStoreOptions : OperationalStoreOptionsBase
 	{
+		public string SigningKeyCollectionName { get; set; } = "SigningKeys";
 	}
 }

@@ -10,7 +10,7 @@ namespace Duende.IdentityServer.MongoDB.Storage.Stores
 {
 	internal class MongoSigningKeyStore : MongoStoreBase<SerializedKey>, ISigningKeyStore
 	{
-		public MongoSigningKeyStore(ConfigurationStoreOptions options) : base(options.Database,
+		public MongoSigningKeyStore(OperationalStoreOptions options) : base(options.Database,
 			options.SigningKeyCollectionName)
 		{
 		}
