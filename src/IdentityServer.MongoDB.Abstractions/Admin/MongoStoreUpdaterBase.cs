@@ -20,6 +20,14 @@ namespace IdentityServer.MongoDB.Abstractions.Admin
 			_collection = collection;
 		}
 
+		public Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> filter,
+			CancellationToken cancellationToken = default) =>
+			_collection.Find(filter).FirstOrDefaultAsync(cancellationToken);
+
+		public Task<TProjection> FirstOrDefaultAsync<TProjection>(Expression<Func<T, bool>> filter,
+			Expression<Func<T, TProjection>> projection, CancellationToken cancellationToken = default) =>
+			_collection.Find(filter).Project(projection).FirstOrDefaultAsync(cancellationToken);
+
 		public Task DeleteManyAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default) =>
 			_collection.DeleteManyAsync(filter, cancellationToken);
 

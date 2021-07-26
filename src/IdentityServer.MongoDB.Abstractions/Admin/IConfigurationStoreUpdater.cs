@@ -8,6 +8,11 @@ namespace IdentityServer.MongoDB.Abstractions.Admin
 {
 	public interface IConfigurationStoreUpdater<T>
 	{
+		Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default);
+
+		Task<TProjection> FirstOrDefaultAsync<TProjection>(Expression<Func<T, bool>> filter,
+			Expression<Func<T, TProjection>> projection, CancellationToken cancellationToken = default);
+
 		Task DeleteManyAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default);
 
 		Task DeleteOneAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default);
