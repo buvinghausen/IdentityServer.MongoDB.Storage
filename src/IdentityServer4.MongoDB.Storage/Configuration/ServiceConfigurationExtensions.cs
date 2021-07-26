@@ -1,6 +1,7 @@
 ﻿using System;
 using IdentityServer.MongoDB.Abstractions.Admin;
 using IdentityServer.MongoDB.Abstractions.Configuration;
+using IdentityServer.MongoDB.Abstractions.Options;
 using IdentityServer.MongoDB.Abstractions.Services;
 using IdentityServer4.Models;
 using IdentityServer4.MongoDB.Storage.Admin;
@@ -8,6 +9,7 @@ using IdentityServer4.MongoDB.Storage.Configuration;
 using IdentityServer4.MongoDB.Storage.Options;
 using IdentityServer4.MongoDB.Storage.Stores;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using MongoDB.Driver;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
@@ -19,40 +21,64 @@ namespace Microsoft.Extensions.DependencyInjection
 		public static IServiceCollection AddIdentityServerConfigurationStoreAdmin(this IServiceCollection services,
 			Action<ConfigurationStoreOptions> config)
 		{
-			Initialize();
 			var options = new ConfigurationStoreOptions();
 			config(options);
+			return services.AddIdentityServerConfigurationStoreAdmin(options);
+		}
+
+		public static IServiceCollection AddIdentityServerConfigurationStoreAdmin(this IServiceCollection services,
+			ConfigurationStoreOptions options)
+		{
+			Initialize(options);
 			services
 				.AddSingleton(options)
 				.TryAddTransient<IDatabaseInitializer, DatabaseInitializer>();
-			return services
-				.AddTransient<IConfigurationStoreUpdater<Client>, MongoClientUpdater>()
+			return services.AddTransient<IConfigurationStoreUpdater<Client>, MongoClientUpdater>()
 				.AddTransient<IConfigurationStoreUpdater<ApiResource>, MongoResourceUpdater<ApiResource>>()
 				.AddTransient<IConfigurationStoreUpdater<ApiScope>, MongoResourceUpdater<ApiScope>>()
 				.AddTransient<IConfigurationStoreUpdater<IdentityResource>, MongoResourceUpdater<IdentityResource>>();
 		}
 
+		public static IServiceCollection AddIdentityServerConfigurationStoreAdmin(this IServiceCollection services,
+			IMongoDatabase database) =>
+			services.AddIdentityServerConfigurationStoreAdmin(new ConfigurationStoreOptions { Database = database });
+
 		public static IServiceCollection AddIdentityServerOperationalStoreAdmin(this IServiceCollection services,
 			Action<OperationalStoreOptions> config)
 		{
-			Initialize();
 			var options = new OperationalStoreOptions();
 			config(options);
+			return services.AddIdentityServerOperationalStoreAdmin(options);
+		}
+
+		public static IServiceCollection AddIdentityServerOperationalStoreAdmin(this IServiceCollection services,
+			OperationalStoreOptions options)
+		{
+			Initialize(options);
 			services
 				.AddSingleton(options)
 				.TryAddTransient<IDatabaseInitializer, DatabaseInitializer>();
 			return services;
 		}
 
-		public static IIdentityServerBuilder AddConfigurationStore(this IIdentityServerBuilder builder, Action<ConfigurationStoreOptions> config)
+		public static IServiceCollection AddIdentityServerOperationalStoreAdmin(this IServiceCollection services,
+			IMongoDatabase database) =>
+			services.AddIdentityServerOperationalStoreAdmin(new OperationalStoreOptions { Database = database });
+
+		public static IIdentityServerBuilder AddConfigurationStore(this IIdentityServerBuilder builder,
+			Action<ConfigurationStoreOptions> config)
 		{
-			Initialize();
 			var options = new ConfigurationStoreOptions();
 			config(options);
+			return builder.AddConfigurationStore(options);
+		}
+
+		public static IIdentityServerBuilder AddConfigurationStore(this IIdentityServerBuilder builder, ConfigurationStoreOptions options)
+		{
+			Initialize(options);
 			builder.Services
 				.AddSingleton(options)
 				.TryAddTransient<IDatabaseInitializer, DatabaseInitializer>();
-
 			builder
 				.AddClientStore<MongoClientStore>()
 				.AddResourceStore<MongoResourceStore>()
@@ -71,11 +97,21 @@ namespace Microsoft.Extensions.DependencyInjection
 			return builder;
 		}
 
-		public static IIdentityServerBuilder AddOperationalStore(this IIdentityServerBuilder builder, Action<OperationalStoreOptions> config)
+		public static IIdentityServerBuilder AddConfigurationStore(this IIdentityServerBuilder builder,
+			IMongoDatabase database) =>
+			builder.AddConfigurationStore(new ConfigurationStoreOptions { Database = database });
+
+		public static IIdentityServerBuilder AddOperationalStore(this IIdentityServerBuilder builder,
+			Action<OperationalStoreOptions> config)
 		{
-			Initialize();
 			var options = new OperationalStoreOptions();
 			config(options);
+			return builder.AddOperationalStore(options);
+		}
+
+		public static IIdentityServerBuilder AddOperationalStore(this IIdentityServerBuilder builder, OperationalStoreOptions options)
+		{
+			Initialize(options);
 			builder.Services
 				.AddSingleton(options)
 				.TryAddTransient<IDatabaseInitializer, DatabaseInitializer>();
@@ -96,9 +132,15 @@ namespace Microsoft.Extensions.DependencyInjection
 			return builder;
 		}
 
+		public static IIdentityServerBuilder AddOperationalStore(this IIdentityServerBuilder builder,
+			IMongoDatabase database) =>
+			builder.AddOperationalStore(new OperationalStoreOptions { Database = database });
 
-		private static void Initialize()
+		private static void Initialize(OptionsBase options)
 		{
+			if (options is null) throw new ArgumentNullException(nameof(options));
+			if (options.Database is null)
+				throw new ArgumentNullException(nameof(options.Database), "You must provide the database");
 			if (_initialized) return;
 			MongoConfiguration.Initialize();
 			_initialized = true;
