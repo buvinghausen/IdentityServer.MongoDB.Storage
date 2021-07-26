@@ -11,10 +11,9 @@ namespace IdentityServer4.MongoDB.Storage.Configuration
 				typeof(Client).Namespace);
 
 			MongoConfigurationBase
-				.RegisterClassMaps<Client, PersistedGrant, DeviceFlowCode, DeviceCode, ApiResource, ApiScope, IdentityResource>(
+				.RegisterClassMaps<Client, PersistedGrant, DeviceCode, ApiResource, ApiScope, IdentityResource>(
 					client => client.ClientId,
 					grant => grant.Key,
-					code => code.UserCode,
 					code => code.Subject);
 		}
 	}
