@@ -6,7 +6,7 @@ using IdentityServer4.MongoDB.Storage.Options;
 
 namespace IdentityServer4.MongoDB.Storage.Configuration
 {
-	public class DatabaseInitializer
+	public class DatabaseInitializer : IDatabaseInitializer
 	{
 		private readonly ConfigurationStoreOptions _configurationStoreOptions;
 		private readonly OperationalStoreOptions _operationalStoreOptions;
@@ -33,7 +33,7 @@ namespace IdentityServer4.MongoDB.Storage.Configuration
 
 		public Task InitializeOperationalStoreAsync(CancellationToken cancellationToken = default) =>
 			DatabaseInitializerBase.InitializeOperationalStoreAsync<DeviceFlowCode, PersistedGrant>(
-				dc => dc.UserCode,
+				dc => dc.DeviceCode,
 				dc => dc.Expiration,
 				pg => pg.SubjectId,
 				pg => pg.ClientId,

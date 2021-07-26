@@ -1,0 +1,11 @@
+﻿{
+  "profiles": {
+    "Duende.IdentityServer.AdminConsole": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

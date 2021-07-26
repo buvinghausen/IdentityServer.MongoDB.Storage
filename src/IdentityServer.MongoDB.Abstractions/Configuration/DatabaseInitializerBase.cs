@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer.MongoDB.Abstractions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace IdentityServer.MongoDB.Abstractions.Configuration
@@ -32,15 +33,15 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 			await CreateCollectionsAsync(configurationStoreOptions.Database,
 				new[] { configurationStoreOptions.ClientCollectionName, configurationStoreOptions.ResourceCollectionName }
 					.Concat(
-						additionalCollectionNames), cancellationToken).ConfigureAwait(false);
+						additionalCollectionNames).ToList(), cancellationToken).ConfigureAwait(false);
 
 			// Step 2 create the unique index on the Resources collection which is a unique composite key of name & the type discriminator
 			await Task.WhenAll(
 				configurationStoreOptions.Database
-					.GetCollection<TClient>(configurationStoreOptions.ResourceCollectionName).Indexes
+					.GetCollection<TClient>(configurationStoreOptions.ClientCollectionName).Indexes
 					.CreateOneAsync(Builders<TClient>.IndexKeys
 							.Ascending(corsOriginsSelector),
-						new CreateIndexOptions { Background = true, Name = "ix_allowedCorsOrigins", Unique = false },
+						new CreateIndexOptions { Background = true, Name = "ix_allowedCorsOrigins", Sparse = true },
 						cancellationToken),
 				configurationStoreOptions.Database
 					.GetCollection<TResource>(configurationStoreOptions.ResourceCollectionName).Indexes
@@ -91,7 +92,7 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 								new CreateIndexOptions {Background = true, Name = "ux_deviceCode", Unique = true}),
 							new(deviceIxBuilder
 									.Ascending(deviceCodeExpirationSelector),
-								new CreateIndexOptions {Background = true, Name = "ix_expiration", Unique = false})
+								new CreateIndexOptions {Background = true, Name = "ix_expiration", Sparse = true})
 						}, cancellationToken),
 				operationalStoreOptions.Database
 					.GetCollection<TPersistedGrant>(operationalStoreOptions.PersistedGrantCollectionName).Indexes
@@ -103,7 +104,7 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 								.Ascending(persistedGrantTypeSelector),
 							new CreateIndexOptions
 							{
-								Background = true, Name = "ix_subjectId_clientId_type", Unique = false
+								Background = true, Name = "ix_subjectId_clientId_type", Sparse = true
 							}),
 						new(grantIxBuilder
 								.Ascending(persistedGrantSubjectIdSelector)
@@ -111,20 +112,38 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 								.Ascending(persistedGrantTypeSelector),
 							new CreateIndexOptions
 							{
-								Background = true, Name = "ix_subjectId_sessionId_type", Unique = false
+								Background = true, Name = "ix_subjectId_sessionId_type", Sparse = true
 							}),
 						new(grantIxBuilder
 								.Ascending(persistedGrantExpirationSelector),
-							new CreateIndexOptions {Background = true, Name = "ix_expiration", Unique = false}),
+							new CreateIndexOptions {Background = true, Name = "ix_expiration", Sparse = true}),
 						new(grantIxBuilder
 								.Ascending(persistedGrantConsumedSelector),
-							new CreateIndexOptions {Background = true, Name = "ix_consumedTime", Unique = false})
+							new CreateIndexOptions {Background = true, Name = "ix_consumedTime", Sparse = true})
 					}, cancellationToken)
 			).ConfigureAwait(false);
 		}
 
-		private static Task CreateCollectionsAsync(IMongoDatabase database, IEnumerable<string> names,
-			CancellationToken cancellationToken) =>
-			Task.WhenAll(names.Select(name => database.CreateCollectionAsync(name, Options, cancellationToken)));
+		private static async Task CreateCollectionsAsync(IMongoDatabase database, IList<string> names,
+			CancellationToken cancellationToken)
+		{
+			// Mongo really should have a better way of doing this but this is a framework component
+			// So the pain is hidden here this is the list of desired collections that are not present
+			names = (await (await database
+					.ListCollectionsAsync(
+						new ListCollectionsOptions
+						{
+							Filter = new BsonDocument("name", new BsonDocument("$in", new BsonArray(names)))
+						}, cancellationToken)
+					.ConfigureAwait(false)).ToListAsync(cancellationToken).ConfigureAwait(false))
+				.Select(bd => bd["name"].AsString).Except(names).ToList();
+
+			// If all the collections are present simply return
+			if (!names.Any()) return;
+
+			// If we got here create the missing collections
+			await Task.WhenAll(names.Select(name => database.CreateCollectionAsync(name, Options, cancellationToken)))
+				.ConfigureAwait(false);
+		}
 	}
 }

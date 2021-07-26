@@ -7,13 +7,15 @@ namespace IdentityServer4.MongoDB.Storage.Configuration
 	{
 		public static void Initialize()
 		{
-			MongoConfigurationBase.RegisterConventions("IdentityServer4.MongoDB.Storage Conventions", typeof(Client).Namespace);
+			MongoConfigurationBase.RegisterConventions("IdentityServer4.MongoDB.Storage Conventions",
+				typeof(Client).Namespace);
 
-			MongoConfigurationBase.RegisterClassMaps<Client, PersistedGrant, DeviceFlowCode, DeviceCode>(
-				client => client.ClientId,
-				grant => grant.Key,
-				code => code.UserCode,
-				code => code.Subject);
+			MongoConfigurationBase
+				.RegisterClassMaps<Client, PersistedGrant, DeviceFlowCode, DeviceCode>(
+					client => client.ClientId,
+					grant => grant.Key,
+					code => code.UserCode,
+					code => code.Subject);
 		}
 	}
 }

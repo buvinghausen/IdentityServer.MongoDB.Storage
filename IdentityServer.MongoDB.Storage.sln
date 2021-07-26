@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.MongoDB.Sto
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.MongoDB.Abstractions", "src\IdentityServer.MongoDB.Abstractions\IdentityServer.MongoDB.Abstractions.csproj", "{DA38390B-F669-432A-A1B9-305B8D4CAE21}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Duende.IdentityServer.AdminConsole", "samples\Duende.IdentityServer.AdminConsole\Duende.IdentityServer.AdminConsole.csproj", "{8D530544-A65F-45E4-A371-4ABA6C50C28D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{DA38390B-F669-432A-A1B9-305B8D4CAE21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA38390B-F669-432A-A1B9-305B8D4CAE21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA38390B-F669-432A-A1B9-305B8D4CAE21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D530544-A65F-45E4-A371-4ABA6C50C28D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D530544-A65F-45E4-A371-4ABA6C50C28D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D530544-A65F-45E4-A371-4ABA6C50C28D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D530544-A65F-45E4-A371-4ABA6C50C28D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
