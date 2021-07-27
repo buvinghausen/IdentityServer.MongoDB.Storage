@@ -133,13 +133,13 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 			// new ListCollectionsOptions
 			// {
 			//	Filter = new BsonDocument("name", new BsonDocument("$in", new BsonArray(names))))
-			//}
-			// Try it out yourself: db.runCommand( { listCollections: 1, filter: {name: {$in:["Clients","Resources"]}}, nameOnly: true } );
+			// }
+			// Try it out yourself: db.runCommand( { listCollections: 1, filter: { name: { $in: ["Clients","Resources"] } }, nameOnly: true } );
 			// Error: {
-			//    "ok" : 0,
-			//    "errmsg" : "can't get regex from filter doc Error parsing value [{$in [Clients Resources]}] to RegEx: Must specify $regex field",
-			//    "code" : 8000,
-			//    "codeName" : "AtlasError"
+			//  "ok" : 0,
+			//  "errmsg" : "can't get regex from filter doc Error parsing value [{$in [Clients Resources]}] to RegEx: Must specify $regex field",
+			//  "code" : 8000,
+			//  "codeName" : "AtlasError"
 			// }
 			// For now just return all the collection names :(
 			names = names.Except((await (await database
