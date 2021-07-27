@@ -47,8 +47,8 @@ namespace Duende.IdentityServer.Web
 								options.EmitStaticAudienceClaim =
 									true) // https://docs.duendesoftware.com/identityserver/v5/fundamentals/resources/
 							.AddDeveloperSigningCredential()
-							.AddConfigurationStore(options => options.Database = database)
-							.AddOperationalStore(options =>
+							.AddMongoConfigurationStore(options => options.Database = database)
+							.AddMongoOperationalStore(options =>
 							{
 								options.Database = database;
 								options.EnableTokenCleanup =

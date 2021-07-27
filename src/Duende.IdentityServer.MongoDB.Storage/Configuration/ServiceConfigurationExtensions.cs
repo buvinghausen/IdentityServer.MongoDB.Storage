@@ -66,15 +66,15 @@ namespace Microsoft.Extensions.DependencyInjection
 			IMongoDatabase database) =>
 			services.AddIdentityServerOperationalStoreAdmin(new OperationalStoreOptions { Database = database });
 
-		public static IIdentityServerBuilder AddConfigurationStore(this IIdentityServerBuilder builder,
+		public static IIdentityServerBuilder AddMongoConfigurationStore(this IIdentityServerBuilder builder,
 			Action<ConfigurationStoreOptions> config)
 		{
 			var options = new ConfigurationStoreOptions();
 			config(options);
-			return builder.AddConfigurationStore(options);
+			return builder.AddMongoConfigurationStore(options);
 		}
 
-		public static IIdentityServerBuilder AddConfigurationStore(this IIdentityServerBuilder builder, ConfigurationStoreOptions options)
+		public static IIdentityServerBuilder AddMongoConfigurationStore(this IIdentityServerBuilder builder, ConfigurationStoreOptions options)
 		{
 			Initialize(options);
 			builder.Services
@@ -99,19 +99,19 @@ namespace Microsoft.Extensions.DependencyInjection
 			return builder;
 		}
 
-		public static IIdentityServerBuilder AddConfigurationStore(this IIdentityServerBuilder builder,
+		public static IIdentityServerBuilder AddMongoConfigurationStore(this IIdentityServerBuilder builder,
 			IMongoDatabase database) =>
-			builder.AddConfigurationStore(new ConfigurationStoreOptions { Database = database });
+			builder.AddMongoConfigurationStore(new ConfigurationStoreOptions { Database = database });
 
-		public static IIdentityServerBuilder AddOperationalStore(this IIdentityServerBuilder builder,
+		public static IIdentityServerBuilder AddMongoOperationalStore(this IIdentityServerBuilder builder,
 			Action<OperationalStoreOptions> config)
 		{
 			var options = new OperationalStoreOptions();
 			config(options);
-			return builder.AddOperationalStore(options);
+			return builder.AddMongoOperationalStore(options);
 		}
 
-		public static IIdentityServerBuilder AddOperationalStore(this IIdentityServerBuilder builder, OperationalStoreOptions options)
+		public static IIdentityServerBuilder AddMongoOperationalStore(this IIdentityServerBuilder builder, OperationalStoreOptions options)
 		{
 			Initialize(options);
 			builder.Services
@@ -135,9 +135,9 @@ namespace Microsoft.Extensions.DependencyInjection
 			return builder;
 		}
 
-		public static IIdentityServerBuilder AddOperationalStore(this IIdentityServerBuilder builder,
+		public static IIdentityServerBuilder AddMongoOperationalStore(this IIdentityServerBuilder builder,
 			IMongoDatabase database) =>
-			builder.AddOperationalStore(new OperationalStoreOptions { Database = database });
+			builder.AddMongoOperationalStore(new OperationalStoreOptions { Database = database });
 
 		private static void Initialize(OptionsBase options)
 		{

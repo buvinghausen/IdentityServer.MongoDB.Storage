@@ -21,6 +21,7 @@ namespace IdentityServer4.Web
 					{
 						services.AddControllers();
 						// Wire up mongo in a telemetry friendly way so you can see all the commands in the console output
+						// Normally I would have an 
 						var url = new MongoUrl(context.Configuration.GetConnectionString("Identity"));
 						var settings = MongoClientSettings.FromUrl(url);
 						settings.ClusterConfigurator = cb =>
@@ -47,8 +48,8 @@ namespace IdentityServer4.Web
 								options.EmitStaticAudienceClaim =
 									true) // https://docs.duendesoftware.com/identityserver/v5/fundamentals/resources/
 							.AddDeveloperSigningCredential()
-							.AddConfigurationStore(options => options.Database = database)
-							.AddOperationalStore(options =>
+							.AddMongoConfigurationStore(options => options.Database = database)
+							.AddMongoOperationalStore(options =>
 							{
 								options.Database = database;
 								options.EnableTokenCleanup =
