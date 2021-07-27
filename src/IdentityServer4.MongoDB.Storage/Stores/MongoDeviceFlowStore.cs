@@ -21,6 +21,6 @@ namespace IdentityServer4.MongoDB.Storage.Stores
 			(data.ClientId, data.CreationTime, data.Lifetime);
 
 		protected override Expression<Func<DeviceFlowCode, bool>> TokenCleanupFilter =>
-			code => code.Expiration <= DateTime.UtcNow;
+			code => code.Expiration < DateTime.UtcNow;
 	}
 }
