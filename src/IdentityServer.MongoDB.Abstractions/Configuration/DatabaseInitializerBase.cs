@@ -129,12 +129,21 @@ namespace IdentityServer.MongoDB.Abstractions.Configuration
 		{
 			// Mongo really should have a better way of doing this but this is a framework component
 			// So the pain is hidden here this is the list of desired collections that are not present
+			// Ok so this command works great on localhost but craters on Atlas
+			// new ListCollectionsOptions
+			// {
+			//	Filter = new BsonDocument("name", new BsonDocument("$in", new BsonArray(names))))
+			//}
+			// Try it out yourself: db.runCommand( { listCollections: 1, filter: {name: {$in:["Clients","Resources"]}}, nameOnly: true } );
+			// Error: {
+			//    "ok" : 0,
+			//    "errmsg" : "can't get regex from filter doc Error parsing value [{$in [Clients Resources]}] to RegEx: Must specify $regex field",
+			//    "code" : 8000,
+			//    "codeName" : "AtlasError"
+			// }
+			// For now just return all the collection names :(
 			names = names.Except((await (await database
-					.ListCollectionsAsync(
-						new ListCollectionsOptions
-						{
-							Filter = new BsonDocument("name", new BsonDocument("$in", new BsonArray(names)))
-						}, cancellationToken)
+					.ListCollectionsAsync(cancellationToken: cancellationToken)
 					.ConfigureAwait(false)).ToListAsync(cancellationToken).ConfigureAwait(false))
 				.Select(bd => bd["name"].AsString)).ToList();
 
