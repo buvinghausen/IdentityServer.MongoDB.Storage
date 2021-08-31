@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace IdentityServer.MongoDB.Abstractions.Services
 {
-	internal class TokenCleanupService : BackgroundService
+	internal sealed class TokenCleanupService : BackgroundService
 	{
 		private readonly TimeSpan _interval;
 		private readonly IOperationalStore[] _operationalStores;

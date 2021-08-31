@@ -8,7 +8,7 @@ using IdentityServer.MongoDB.Abstractions.Stores;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Stores
 {
-	internal class MongoIdentityProviderStore : MongoStoreBase<IdentityProvider>, IIdentityProviderStore
+	internal sealed class MongoIdentityProviderStore : MongoStoreBase<IdentityProvider>, IIdentityProviderStore
 	{
 		public MongoIdentityProviderStore(ConfigurationStoreOptions options) : base(options.Database, options.IdentityProviderCollectionName)
 		{

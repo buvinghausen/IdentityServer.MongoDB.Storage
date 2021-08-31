@@ -8,7 +8,7 @@ using IdentityServer.MongoDB.Abstractions.Stores;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Stores
 {
-	internal class MongoClientStore : MongoClientStoreBase<Client>, IClientStore, ICorsPolicyService
+	internal sealed class MongoClientStore : MongoClientStoreBase<Client>, IClientStore, ICorsPolicyService
 	{
 		// ReSharper disable once SuggestBaseTypeForParameter
 		public MongoClientStore(ConfigurationStoreOptions options) : base(options)

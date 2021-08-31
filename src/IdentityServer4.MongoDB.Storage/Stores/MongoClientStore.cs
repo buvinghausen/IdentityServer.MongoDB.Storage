@@ -9,7 +9,7 @@ using IdentityServer4.Stores;
 namespace IdentityServer4.MongoDB.Storage.Stores
 {
 	// This class just provides the IdentityServer4 versions of Client & IClientStore
-	internal class MongoClientStore : MongoClientStoreBase<Client>, IClientStore, ICorsPolicyService
+	internal sealed class MongoClientStore : MongoClientStoreBase<Client>, IClientStore, ICorsPolicyService
 	{
 		// ReSharper disable once SuggestBaseTypeForParameter
 		public MongoClientStore(ConfigurationStoreOptions options) : base(options)

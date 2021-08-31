@@ -9,7 +9,7 @@ using IdentityServer.MongoDB.Abstractions.Stores;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Stores
 {
-	internal class MongoResourceStore : MongoResourceStoreBase<Resource, IdentityResource, ApiResource, ApiScope, Resources>, IResourceStore
+	internal sealed class MongoResourceStore : MongoResourceStoreBase<Resource, IdentityResource, ApiResource, ApiScope, Resources>, IResourceStore
 	{
 		// ReSharper disable once SuggestBaseTypeForParameter
 		public MongoResourceStore(ConfigurationStoreOptions options) : base(options)

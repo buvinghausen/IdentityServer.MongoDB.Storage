@@ -8,7 +8,7 @@ using IdentityServer.MongoDB.Abstractions.Stores;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Stores
 {
-	internal class MongoSigningKeyStore : MongoStoreBase<SerializedKey>, ISigningKeyStore
+	internal sealed class MongoSigningKeyStore : MongoStoreBase<SerializedKey>, ISigningKeyStore
 	{
 		public MongoSigningKeyStore(OperationalStoreOptions options) : base(options.Database,
 			options.SigningKeyCollectionName)

@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 
 namespace IdentityServer4.Web
 {
-    public class WeatherForecast
+    public sealed class WeatherForecast
     {
         public DateTime Date { get; set; }
 

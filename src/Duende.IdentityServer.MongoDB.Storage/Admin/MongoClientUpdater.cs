@@ -7,7 +7,7 @@ using MongoDB.Driver;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Admin
 {
-	public class MongoClientUpdater : MongoStoreUpdaterBase<Client>
+	public sealed class MongoClientUpdater : MongoStoreUpdaterBase<Client>
 	{
 		// ReSharper disable once SuggestBaseTypeForParameter
 		public MongoClientUpdater(ConfigurationStoreOptions options) : this(options.Database,

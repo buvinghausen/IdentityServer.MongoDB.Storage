@@ -12,7 +12,7 @@ namespace Duende.IdentityServer.AdminConsole
 	/// <summary>
 	/// 
 	/// </summary>
-	internal class DatabaseInitializer : IHostedService
+	internal sealed class DatabaseInitializer : IHostedService
 	{
 		private static readonly string[] AllowedScopes =
 		{

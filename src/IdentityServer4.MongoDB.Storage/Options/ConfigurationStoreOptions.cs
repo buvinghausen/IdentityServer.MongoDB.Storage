@@ -2,7 +2,7 @@
 
 namespace IdentityServer4.MongoDB.Storage.Options
 {
-	public class ConfigurationStoreOptions : ConfigurationStoreOptionsBase
+	public sealed class ConfigurationStoreOptions : ConfigurationStoreOptionsBase
 	{
 	}
 }

@@ -8,7 +8,7 @@ using IdentityServer4.Stores;
 
 namespace IdentityServer4.MongoDB.Storage.Stores
 {
-	internal class MongoPersistedGrantStore : MongoPersistedGrantStoreBase<PersistedGrant, PersistedGrantFilter>, IPersistedGrantStore
+	internal sealed class MongoPersistedGrantStore : MongoPersistedGrantStoreBase<PersistedGrant, PersistedGrantFilter>, IPersistedGrantStore
 	{
 		// ReSharper disable once SuggestBaseTypeForParameter
 		public MongoPersistedGrantStore(OperationalStoreOptions options) : base(options)

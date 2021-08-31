@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace IdentityServer4.AdminConsole
 {
-	internal class DatabaseInitializer : IHostedService
+	internal sealed class DatabaseInitializer : IHostedService
 	{
 		private static readonly string[] AllowedScopes =
 		{

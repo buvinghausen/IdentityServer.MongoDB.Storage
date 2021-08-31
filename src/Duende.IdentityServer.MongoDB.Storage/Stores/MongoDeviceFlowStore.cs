@@ -8,7 +8,7 @@ using IdentityServer.MongoDB.Abstractions.Stores;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Stores
 {
-	internal class MongoDeviceFlowStore : MongoDeviceFlowStoreBase<DeviceCode, DeviceFlowCode>, IDeviceFlowStore
+	internal sealed class MongoDeviceFlowStore : MongoDeviceFlowStoreBase<DeviceCode, DeviceFlowCode>, IDeviceFlowStore
 	{
 		// ReSharper disable once SuggestBaseTypeForParameter
 		public MongoDeviceFlowStore(OperationalStoreOptions options) : base(options)

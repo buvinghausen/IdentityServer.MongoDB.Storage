@@ -3,7 +3,7 @@
 // ReSharper disable once CheckNamespace
 namespace IdentityServer4.Models
 {
-	internal class DeviceFlowCode : DeviceFlowCodeBase<DeviceCode>
+	internal sealed class DeviceFlowCode : DeviceFlowCodeBase<DeviceCode>
 	{
 	}
 }

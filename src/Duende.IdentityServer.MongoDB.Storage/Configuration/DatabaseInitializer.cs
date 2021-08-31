@@ -6,7 +6,7 @@ using IdentityServer.MongoDB.Abstractions.Configuration;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Configuration
 {
-	public class DatabaseInitializer : IDatabaseInitializer
+	public sealed class DatabaseInitializer : IDatabaseInitializer
 	{
 		private readonly ConfigurationStoreOptions _configurationStoreOptions;
 		private readonly OperationalStoreOptions _operationalStoreOptions;

@@ -2,7 +2,7 @@
 
 namespace Duende.IdentityServer.MongoDB.Storage.Options
 {
-	public class ConfigurationStoreOptions : ConfigurationStoreOptionsBase
+	public sealed class ConfigurationStoreOptions : ConfigurationStoreOptionsBase
 	{
 		public string IdentityProviderCollectionName { get; set; } = "IdentityProviders";
 	}

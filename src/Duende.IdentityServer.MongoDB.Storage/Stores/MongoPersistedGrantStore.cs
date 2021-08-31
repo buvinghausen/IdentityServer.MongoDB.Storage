@@ -8,7 +8,7 @@ using IdentityServer.MongoDB.Abstractions.Stores;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Stores
 {
-	internal class MongoPersistedGrantStore : MongoPersistedGrantStoreBase<PersistedGrant, PersistedGrantFilter>,
+	internal sealed class MongoPersistedGrantStore : MongoPersistedGrantStoreBase<PersistedGrant, PersistedGrantFilter>,
 		IPersistedGrantStore
 	{
 		// ReSharper disable once SuggestBaseTypeForParameter

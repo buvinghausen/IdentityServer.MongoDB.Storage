@@ -7,7 +7,7 @@ using MongoDB.Driver;
 
 namespace Duende.IdentityServer.MongoDB.Storage.Admin
 {
-	public class MongoIdentityProviderUpdater : MongoStoreUpdaterBase<IdentityProvider>
+	public sealed class MongoIdentityProviderUpdater : MongoStoreUpdaterBase<IdentityProvider>
 	{
 		public MongoIdentityProviderUpdater(ConfigurationStoreOptions options) : this(options.Database,
 			options.IdentityProviderCollectionName)
