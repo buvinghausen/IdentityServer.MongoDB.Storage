@@ -1,8 +1,5 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
 using IdentityModel;
 using IdentityServer.MongoDB.Abstractions.Entities;
 using IdentityServer.MongoDB.Abstractions.Options;

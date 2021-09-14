@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Security.Claims;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.MongoDB.Storage.Options;

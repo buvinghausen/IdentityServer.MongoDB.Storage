@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace IdentityServer.MongoDB.Abstractions.Entities;
+﻿namespace IdentityServer.MongoDB.Abstractions.Entities;
 
 // This class is here as a wrapper to match what the EntityFramework storage provider has
 // Rather than serialize the device code to JSON and put it in a string we run the native object in

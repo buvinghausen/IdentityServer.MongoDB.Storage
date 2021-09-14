@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>dotnet-IdentityServer4.AdminConsole-B21DA72F-AEF7-4ABA-A8B6-2EC5406449EF</UserSecretsId>
+    <ImplicitUsings>true</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

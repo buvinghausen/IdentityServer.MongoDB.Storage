@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace IdentityServer.MongoDB.Abstractions.Services;
+﻿namespace IdentityServer.MongoDB.Abstractions.Services;
 
 interface IOperationalStore
 {

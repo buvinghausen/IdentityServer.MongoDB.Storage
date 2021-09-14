@@ -1,5 +1,4 @@
-﻿using System;
-using Duende.IdentityServer.Models;
+﻿using Duende.IdentityServer.Models;
 using Duende.IdentityServer.MongoDB.Storage.Admin;
 using Duende.IdentityServer.MongoDB.Storage.Configuration;
 using Duende.IdentityServer.MongoDB.Storage.Options;

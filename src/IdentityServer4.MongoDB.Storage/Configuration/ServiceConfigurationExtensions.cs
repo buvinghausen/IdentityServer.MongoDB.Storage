@@ -1,5 +1,4 @@
-﻿using System;
-using IdentityServer.MongoDB.Abstractions.Admin;
+﻿using IdentityServer.MongoDB.Abstractions.Admin;
 using IdentityServer.MongoDB.Abstractions.Configuration;
 using IdentityServer.MongoDB.Abstractions.Options;
 using IdentityServer.MongoDB.Abstractions.Services;

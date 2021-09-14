@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using IdentityServer.MongoDB.Abstractions.Options;
+﻿using IdentityServer.MongoDB.Abstractions.Options;
 
 namespace IdentityServer.MongoDB.Abstractions.Stores;
 

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using IdentityServer.MongoDB.Abstractions.Options;
+﻿using IdentityServer.MongoDB.Abstractions.Options;
 using Microsoft.Extensions.Hosting;
 
 namespace IdentityServer.MongoDB.Abstractions.Services;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Security.Claims;
 using IdentityServer.MongoDB.Abstractions.Stores;
 using IdentityServer4.Models;

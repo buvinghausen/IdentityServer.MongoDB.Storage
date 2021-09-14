@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using IdentityServer.MongoDB.Abstractions.Configuration;
+﻿using IdentityServer.MongoDB.Abstractions.Configuration;
 using IdentityServer4.Models;
 using IdentityServer4.MongoDB.Storage.Options;
 
@@ -28,8 +26,8 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
 	}
 
 	public Task InitializeConfigurationStoreAsync(CancellationToken cancellationToken = default) =>
-		DatabaseInitializerBase.InitializeConfigurationStoreAsync<Client, Resource>(c => c.AllowedCorsOrigins, r => r.Name, new string[0], _configurationStoreOptions, cancellationToken);
+		DatabaseInitializerBase.InitializeConfigurationStoreAsync<Client, Resource>(c => c.AllowedCorsOrigins, r => r.Name, Array.Empty<string>(), _configurationStoreOptions, cancellationToken);
 
 	public Task InitializeOperationalStoreAsync(CancellationToken cancellationToken = default) =>
-		DatabaseInitializerBase.InitializeOperationalStoreAsync<DeviceFlowCode, PersistedGrant>(dc => dc.DeviceCode, dc => dc.Expiration, pg => pg.SubjectId, pg => pg.ClientId, pg => pg.SessionId, pg => pg.Type, pg => pg.Expiration, pg => pg.ConsumedTime, new string[0], _operationalStoreOptions, cancellationToken);
+		DatabaseInitializerBase.InitializeOperationalStoreAsync<DeviceFlowCode, PersistedGrant>(dc => dc.DeviceCode, dc => dc.Expiration, pg => pg.SubjectId, pg => pg.ClientId, pg => pg.SessionId, pg => pg.Type, pg => pg.Expiration, pg => pg.ConsumedTime, Array.Empty<string>(), _operationalStoreOptions, cancellationToken);
 }

@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-
-namespace IdentityServer.MongoDB.Abstractions.Configuration;
+﻿namespace IdentityServer.MongoDB.Abstractions.Configuration;
 
 public interface IDatabaseInitializer
 {

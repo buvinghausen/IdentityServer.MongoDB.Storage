@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using IdentityServer.MongoDB.Abstractions.Admin;
+﻿using IdentityServer.MongoDB.Abstractions.Admin;
 using IdentityServer4.Models;
 using IdentityServer4.MongoDB.Storage.Options;
 using MongoDB.Driver;

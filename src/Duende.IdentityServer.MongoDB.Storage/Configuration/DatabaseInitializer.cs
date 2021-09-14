@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Duende.IdentityServer.Models;
+﻿using Duende.IdentityServer.Models;
 using Duende.IdentityServer.MongoDB.Storage.Options;
 using IdentityServer.MongoDB.Abstractions.Configuration;
 

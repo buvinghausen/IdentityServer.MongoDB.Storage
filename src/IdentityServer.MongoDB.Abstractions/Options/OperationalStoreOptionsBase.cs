@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace IdentityServer.MongoDB.Abstractions.Options;
+﻿namespace IdentityServer.MongoDB.Abstractions.Options;
 
 public abstract class OperationalStoreOptionsBase : OptionsBase
 {

@@ -26,11 +26,7 @@ internal sealed class DatabaseInitializer : IHostedService
 	}
 
 	// This constructor will be called when the configuration store has been added
-	public DatabaseInitializer(IDatabaseInitializer databaseInitializer,
-		IConfigurationStoreUpdater<Client> clientUpdater,
-		IConfigurationStoreUpdater<ApiResource> apiResourceUpdater,
-		IConfigurationStoreUpdater<ApiScope> apiScopeUpdater,
-		IConfigurationStoreUpdater<IdentityResource> identityResourceUpdater)
+	public DatabaseInitializer(IDatabaseInitializer databaseInitializer, IConfigurationStoreUpdater<Client> clientUpdater, IConfigurationStoreUpdater<ApiResource> apiResourceUpdater, IConfigurationStoreUpdater<ApiScope> apiScopeUpdater, IConfigurationStoreUpdater<IdentityResource> identityResourceUpdater)
 	{
 		_databaseInitializer = databaseInitializer;
 		_clientUpdater = clientUpdater;
