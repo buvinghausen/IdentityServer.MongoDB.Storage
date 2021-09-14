@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>dotnet-Duende.IdentityServer.AdminConsole-38E8F0C2-B684-4B6F-A949-74BC9147DD2C</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Duende.IdentityServer" Version="5.*" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.*" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0-*" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,9 +1,8 @@
 ﻿using MongoDB.Driver;
 
-namespace IdentityServer.MongoDB.Abstractions.Options
+namespace IdentityServer.MongoDB.Abstractions.Options;
+
+public abstract class OptionsBase
 {
-	public abstract class OptionsBase
-	{
-		public IMongoDatabase Database { get; set; }
-	}
+	public IMongoDatabase Database { get; set; }
 }

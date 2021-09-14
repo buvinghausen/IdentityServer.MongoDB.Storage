@@ -5,22 +5,21 @@ using IdentityServer4.Models;
 using IdentityServer4.MongoDB.Storage.Options;
 using MongoDB.Driver;
 
-namespace IdentityServer4.MongoDB.Storage.Admin
+namespace IdentityServer4.MongoDB.Storage.Admin;
+
+public sealed class MongoResourceUpdater<T> : MongoStoreUpdaterBase<T> where T : Resource
 {
-	public sealed class MongoResourceUpdater<T> : MongoStoreUpdaterBase<T> where T : Resource
+	// ReSharper disable once SuggestBaseTypeForParameter
+	public MongoResourceUpdater(ConfigurationStoreOptions options) :
+		this(options.Database, options.ResourceCollectionName)
 	{
-		// ReSharper disable once SuggestBaseTypeForParameter
-		public MongoResourceUpdater(ConfigurationStoreOptions options) : this(options.Database,
-			options.ResourceCollectionName)
-		{
-		}
-
-		public MongoResourceUpdater(IMongoDatabase database, string collectionName) : base(database
-			.GetCollection<Resource>(collectionName).OfType<T>())
-		{
-		}
-
-		public override Task InsertOrUpdateAsync(T entity, CancellationToken cancellationToken = default) =>
-			InsertOrUpdateAsync(r => r.Name == entity.Name, entity, cancellationToken);
 	}
+
+	public MongoResourceUpdater(IMongoDatabase database, string collectionName) :
+		base(database.GetCollection<Resource>(collectionName).OfType<T>())
+	{
+	}
+
+	public override Task InsertOrUpdateAsync(T entity, CancellationToken cancellationToken = default) =>
+		InsertOrUpdateAsync(r => r.Name == entity.Name, entity, cancellationToken);
 }
