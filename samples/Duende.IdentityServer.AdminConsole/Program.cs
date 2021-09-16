@@ -1,6 +1,4 @@
-﻿using Shared;
-
-namespace Duende.IdentityServer.AdminConsole;
+﻿namespace Duende.IdentityServer.AdminConsole;
 
 internal class Program
 {

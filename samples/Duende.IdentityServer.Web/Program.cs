@@ -1,5 +1,4 @@
 ﻿using OpenTelemetry.Trace;
-using Shared;
 
 namespace Duende.IdentityServer.Web;
 

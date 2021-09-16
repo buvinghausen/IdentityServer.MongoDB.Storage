@@ -1,6 +1,4 @@
-﻿using Shared;
-
-namespace IdentityServer4.AdminConsole;
+﻿namespace IdentityServer4.AdminConsole;
 
 internal class Program
 {

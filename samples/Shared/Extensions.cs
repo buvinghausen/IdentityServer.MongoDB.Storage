@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Extensions.DiagnosticSources;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using SequentialGuid;
 
-namespace Shared;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class Extensions
 {
