@@ -9,10 +9,7 @@
   <ItemGroup>
     <PackageReference Include="IdentityModel.AspNetCore.AccessTokenValidation" Version="1.0.0-*" />
     <PackageReference Include="IdentityServer4" Version="4.*" />
-
-    <PackageReference Include="SequentialGuid" Version="2.*" />
     <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-*" />
-    <PackageReference Include="SequentialGuid" Version="2.*" />
   </ItemGroup>
 
   <ItemGroup>
