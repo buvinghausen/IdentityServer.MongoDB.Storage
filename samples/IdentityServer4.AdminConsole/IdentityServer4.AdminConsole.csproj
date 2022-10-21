@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <UserSecretsId>dotnet-IdentityServer4.AdminConsole-B21DA72F-AEF7-4ABA-A8B6-2EC5406449EF</UserSecretsId>
     <ImplicitUsings>true</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="IdentityServer4" Version="4.*" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.*" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0-*" />
   </ItemGroup>
 
   <ItemGroup>

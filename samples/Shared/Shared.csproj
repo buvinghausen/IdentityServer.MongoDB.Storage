@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>true</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
@@ -11,7 +11,7 @@
     <PackageReference Include="MongoDB.Driver.Core.Extensions.OpenTelemetry" Version="1.*" />
     <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.*" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-*" />
-    <PackageReference Include="SequentialGuid" Version="3.*" />
+    <PackageReference Include="SequentialGuid" Version="4.*" />
   </ItemGroup>
 
 </Project>

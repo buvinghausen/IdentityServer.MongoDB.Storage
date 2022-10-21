@@ -13,9 +13,8 @@ internal sealed class UserSessionStore : IUserSessionStore, IUserSessionStoreCle
 	private readonly IMongoQueryable<UserSessionEntity> _queryable;
 	private readonly ILogger<UserSessionStore> _logger;
 
-	public UserSessionStore(IOptions<DataProtectionOptions> options, IMongoDatabase database, ILogger<UserSessionStore> logger) : this()
+	public UserSessionStore(IOptions<DataProtectionOptions> options, IMongoDatabase database, ILogger<UserSessionStore> logger) : this(options, database.GetCollection<UserSessionEntity>("UserSessions"), logger)
 	{
-
 	}
 
 	private UserSessionStore(IOptions<DataProtectionOptions> options, IMongoCollection<UserSessionEntity> collection, ILogger<UserSessionStore> logger)
