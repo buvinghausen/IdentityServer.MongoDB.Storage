@@ -2,9 +2,9 @@
 
 public abstract class OperationalStoreOptionsBase : OptionsBase
 {
-	public bool EnableTokenCleanup { get; set; } = false;
+	public bool EnableTokenCleanup { get; set; }
 
-	public bool RemoveConsumedTokens { get; set; } = false;
+	public bool RemoveConsumedTokens { get; set; }
 
 	public TimeSpan TokenCleanupInterval { get; set; } = TimeSpan.FromHours(1);
 

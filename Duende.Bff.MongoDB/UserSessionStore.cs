@@ -39,7 +39,7 @@ internal sealed class UserSessionStore : IUserSessionStore, IUserSessionStoreCle
 		}
 		else
 		{
-			_logger.LogDebug("No record found in user session store when trying to get user session for key {key}", key);
+			_logger.NoUserSessionFound(key);
 		}
 		return result;
 	}
@@ -68,7 +68,7 @@ internal sealed class UserSessionStore : IUserSessionStore, IUserSessionStoreCle
 		}
 		else
 		{
-			_logger.LogDebug("No record found in user session store when trying to update user session for key {key}", key);
+			_logger.NoUserSessionFound(key);
 		}
 	}
 

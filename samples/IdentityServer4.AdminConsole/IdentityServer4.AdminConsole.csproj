@@ -4,7 +4,10 @@
     <TargetFramework>net7.0</TargetFramework>
     <UserSecretsId>dotnet-IdentityServer4.AdminConsole-B21DA72F-AEF7-4ABA-A8B6-2EC5406449EF</UserSecretsId>
     <ImplicitUsings>true</ImplicitUsings>
+    <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest-Recommended</AnalysisLevel>
   </PropertyGroup>
 
   <ItemGroup>

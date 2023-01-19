@@ -3,7 +3,7 @@ using MongoDB.Driver;
 
 namespace IdentityServer.MongoDB.Abstractions.Admin;
 
-public abstract class MongoStoreUpdaterBase<T> : IConfigurationStoreUpdater<T>
+public abstract class MongoStoreUpdaterBase<T> : IConfigurationStoreUpdater<T>, IDisposable
 {
 	private readonly IMongoCollection<T> _collection;
 	private readonly UpdateDefinitionBuilder<T> _updateBuilder = Builders<T>.Update;
@@ -37,108 +37,108 @@ public abstract class MongoStoreUpdaterBase<T> : IConfigurationStoreUpdater<T>
 	public Task UpdateOneAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken = default) =>
 		UpdateAsync(filter, false, cancellationToken);
 
-	public bool HasChanges => _updates.Value.Any();
+	public bool HasChanges => _updates.Value?.Any() ?? false;
 
 	public IConfigurationStoreUpdater<T> AddToSet<TItem>(Expression<Func<T, IEnumerable<TItem>>> field, TItem value)
 	{
-		_updates.Value.Add(_updateBuilder.AddToSet(field,
+		_updates.Value!.Add(_updateBuilder.AddToSet(field,
 			value ?? throw new ArgumentNullException(nameof(value))));
 		return this;
 	}
 
 	public IConfigurationStoreUpdater<T> AddToSetEach<TItem>(Expression<Func<T, IEnumerable<TItem>>> field, IEnumerable<TItem> values)
 	{
-		_updates.Value.Add(_updateBuilder.AddToSetEach(field, values ?? throw new ArgumentNullException(nameof(values))));
+		_updates.Value!.Add(_updateBuilder.AddToSetEach(field, values ?? throw new ArgumentNullException(nameof(values))));
 		return this;
 	}
 
 	public IConfigurationStoreUpdater<T> BitwiseAnd<TField>(Expression<Func<T, TField>> field, TField value)
 	{
-		_updates.Value.Add(_updateBuilder.BitwiseAnd(field, value ?? throw new ArgumentNullException(nameof(value))));
+		_updates.Value!.Add(_updateBuilder.BitwiseAnd(field, value ?? throw new ArgumentNullException(nameof(value))));
 		return this;
 	}
 
 	public IConfigurationStoreUpdater<T> BitwiseOr<TField>(Expression<Func<T, TField>> field, TField value)
 	{
-		_updates.Value.Add(_updateBuilder.BitwiseOr(field, value ?? throw new ArgumentNullException(nameof(value))));
+		_updates.Value!.Add(_updateBuilder.BitwiseOr(field, value ?? throw new ArgumentNullException(nameof(value))));
 		return this;
 	}
 
 	public IConfigurationStoreUpdater<T> BitwiseXor<TField>(Expression<Func<T, TField>> field, TField value)
 	{
-		_updates.Value.Add(_updateBuilder.BitwiseXor(field, value ?? throw new ArgumentNullException(nameof(value))));
+		_updates.Value!.Add(_updateBuilder.BitwiseXor(field, value ?? throw new ArgumentNullException(nameof(value))));
 		return this;
 	}
 
 	public IConfigurationStoreUpdater<T> Inc<TField>(Expression<Func<T, TField>> field, TField value)
 	{
-		_updates.Value.Add(_updateBuilder.Inc(field, value ?? throw new ArgumentNullException(nameof(value))));
+		_updates.Value!.Add(_updateBuilder.Inc(field, value ?? throw new ArgumentNullException(nameof(value))));
 		return this;
 	}
 
 	public IConfigurationStoreUpdater<T> Max<TField>(Expression<Func<T, TField>> field, TField value)
 	{
-		_updates.Value.Add(_updateBuilder.Max(field, value ?? throw new ArgumentNullException(nameof(value))));
+		_updates.Value!.Add(_updateBuilder.Max(field, value ?? throw new ArgumentNullException(nameof(value))));
 		return this;
 	}
 
 	public IConfigurationStoreUpdater<T> Min<TField>(Expression<Func<T, TField>> field, TField value)
 	{
-		_updates.Value.Add(_updateBuilder.Min(field, value ?? throw new ArgumentNullException(nameof(value))));
+		_updates.Value!.Add(_updateBuilder.Min(field, value ?? throw new ArgumentNullException(nameof(value))));
 		return this;
 	}
 
 	public IConfigurationStoreUpdater<T> Mul<TField>(Expression<Func<T, TField>> field, TField value)
 	{
-		_updates.Value.Add(_updateBuilder.Mul(field, value ?? throw new ArgumentNullException(nameof(value))));
+		_updates.Value!.Add(_updateBuilder.Mul(field, value ?? throw new ArgumentNullException(nameof(value))));
 		return this;
 	}
 
 	public IConfigurationStoreUpdater<T> PopFirst<TField>(Expression<Func<T, TField>> field)
 	{
-		_updates.Value.Add(_updateBuilder.PopFirst(field.ToObjectLambda()));
+		_updates.Value!.Add(_updateBuilder.PopFirst(field.ToObjectLambda()));
 		return this;
 	}
 
 	public IConfigurationStoreUpdater<T> PopLast<TField>(Expression<Func<T, TField>> field)
 	{
-		_updates.Value.Add(_updateBuilder.PopLast(field.ToObjectLambda()));
+		_updates.Value!.Add(_updateBuilder.PopLast(field.ToObjectLambda()));
 		return this;
 	}
 
 	public IConfigurationStoreUpdater<T> Pull<TItem>(Expression<Func<T, IEnumerable<TItem>>> field, TItem value)
 	{
-		_updates.Value.Add(_updateBuilder.Pull(field, value ?? throw new ArgumentNullException(nameof(value))));
+		_updates.Value!.Add(_updateBuilder.Pull(field, value ?? throw new ArgumentNullException(nameof(value))));
 		return this;
 	}
 
 	public IConfigurationStoreUpdater<T> PullAll<TItem>(Expression<Func<T, IEnumerable<TItem>>> field, IEnumerable<TItem> values)
 	{
-		_updates.Value.Add(_updateBuilder.PullAll(field, values ?? throw new ArgumentNullException(nameof(values))));
+		_updates.Value!.Add(_updateBuilder.PullAll(field, values ?? throw new ArgumentNullException(nameof(values))));
 		return this;
 	}
 
 	public IConfigurationStoreUpdater<T> PullFilter<TItem>(Expression<Func<T, IEnumerable<TItem>>> field, Expression<Func<TItem, bool>> filter)
 	{
-		_updates.Value.Add(_updateBuilder.PullFilter(field, filter));
+		_updates.Value!.Add(_updateBuilder.PullFilter(field, filter));
 		return this;
 	}
 
 	public IConfigurationStoreUpdater<T> Push<TItem>(Expression<Func<T, IEnumerable<TItem>>> field, TItem value)
 	{
-		_updates.Value.Add(_updateBuilder.Push(field, value ?? throw new ArgumentNullException(nameof(value))));
+		_updates.Value!.Add(_updateBuilder.Push(field, value ?? throw new ArgumentNullException(nameof(value))));
 		return this;
 	}
 
 	public IConfigurationStoreUpdater<T> Set<TField>(Expression<Func<T, TField>> field, TField value)
 	{
-		_updates.Value.Add(_updateBuilder.Set(field, value));
+		_updates.Value!.Add(_updateBuilder.Set(field, value));
 		return this;
 	}
 
 	public IConfigurationStoreUpdater<T> Unset<TField>(Expression<Func<T, TField>> field)
 	{
-		_updates.Value.Add(_updateBuilder.Unset(field.ToObjectLambda()));
+		_updates.Value!.Add(_updateBuilder.Unset(field.ToObjectLambda()));
 		return this;
 	}
 
@@ -160,7 +160,13 @@ public abstract class MongoStoreUpdaterBase<T> : IConfigurationStoreUpdater<T>
 				.ConfigureAwait(false);
 		}
 
-		_updates.Value.Clear();
+		_updates.Value?.Clear();
+	}
+
+	public void Dispose()
+	{
+		GC.SuppressFinalize(this);
+		_updates.Dispose();
 	}
 }
 
